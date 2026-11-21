@@ -71,7 +71,7 @@ const faqSchema = {
   <section class="w-full hairline-b bg-white py-14 lg:py-20">
     <div class="swiss-container space-y-8">
       <!-- Breadcrumbs -->
-      <nav aria-label="Breadcrumbs" class="font-mono text-xs text-[#8c8c8c] flex items-center gap-2">
+      <nav aria-label="Breadcrumbs" class="font-mono text-xs text-[#595959] flex items-center gap-2">
         <a href={routes.home} class="hover:text-[#222222] transition-colors">{content.nav.home}</a>
         <span aria-hidden="true">/</span>
         <span class="text-[#222222] font-semibold">{isDe ? 'FAQ' : 'FAQ'}</span>
@@ -158,7 +158,7 @@ const faqSchema = {
                 <span
                   class:list={[
                     'px-1.5 py-0.2 rounded-full text-[10px] font-bold',
-                    idx === 0 ? 'bg-white/20 text-white' : 'bg-[#f7f7f7] text-[#8c8c8c]',
+                    idx === 0 ? 'bg-white/20 text-white' : 'bg-[#f7f7f7] text-[#595959]',
                   ]}
                 >
                   {cat.count}
@@ -176,7 +176,7 @@ const faqSchema = {
     <div class="swiss-container">
       <div class="max-w-4xl mx-auto space-y-6">
         <!-- Results Count / Filter Status -->
-        <div class="flex items-center justify-between text-xs font-mono text-[#8c8c8c] px-2">
+        <div class="flex items-center justify-between text-xs font-mono text-[#595959] px-2">
           <span id="faq-results-count">
             {isDe ? `Zeige ${allFaqs.length} Fragen` : `Showing all ${allFaqs.length} questions`}
           </span>
@@ -222,7 +222,7 @@ const faqSchema = {
               >
                 <summary class="flex items-center justify-between gap-4 cursor-pointer list-none font-display text-base sm:text-lg font-semibold text-[#222222] group-hover:text-[#f7931e] transition-colors">
                   <div class="flex items-start sm:items-center gap-3 sm:gap-4">
-                    <span class="font-mono text-xs text-[#f7931e] pt-1 sm:pt-0 shrink-0 font-bold">
+                    <span class="font-mono text-xs text-[#b45309] pt-1 sm:pt-0 shrink-0 font-bold">
                       {String(idx + 1).padStart(2, '0')}
                     </span>
                     <span class="leading-snug">{item.q}</span>

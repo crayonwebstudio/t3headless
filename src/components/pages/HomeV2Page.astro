@@ -286,12 +286,15 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
         data-steps={JSON.stringify(workflowSteps)}
       >
         <!-- Left: 5 Clickable Interactive Steps -->
-        <div class="lg:col-span-5 space-y-2.5">
+        <div class="lg:col-span-5 space-y-2.5" role="tablist" aria-label="Workflow steps">
           {
             workflowSteps.map((step, idx) => (
               <button
                 type="button"
                 data-wf-btn={String(idx)}
+                role="tab"
+                id={`v2-wf-tab-${idx}`}
+                aria-controls="v2-wf-card"
                 aria-selected={idx === 0 ? 'true' : 'false'}
                 class:list={[
                   'w-full text-left p-5 rounded-2xl border transition-all duration-200 flex items-start gap-4 cursor-pointer',
@@ -311,7 +314,7 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
                   {step.num}
                 </span>
                 <div class="space-y-1 min-w-0">
-                  <span class:list={['block font-mono text-[10px] uppercase tracking-wider', idx === 0 ? 'text-[#f7931e]' : 'text-[#8c8c8c]']}>
+                  <span class:list={['block font-mono text-[10px] uppercase tracking-wider', idx === 0 ? 'text-[#f7931e]' : 'text-[#595959]']}>
                     {step.badge}
                   </span>
                   <span class="block text-base font-bold leading-snug">{step.title}</span>
@@ -323,7 +326,7 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
 
         <!-- Right: Dynamic Morphing Stage Inspector -->
         <div class="lg:col-span-7 lg:sticky lg:top-24">
-          <div id="v2-wf-card" class="rounded-2xl border border-[#222222]/14 bg-[#f7f7f7] p-7 sm:p-9 space-y-6 transition-all duration-300">
+          <div id="v2-wf-card" role="tabpanel" aria-labelledby="v2-wf-title" class="rounded-2xl border border-[#222222]/14 bg-[#f7f7f7] p-7 sm:p-9 space-y-6 transition-all duration-300">
             <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#222222]/12">
               <span id="v2-wf-badge" class="uxis-pill uxis-pill-orange font-mono text-xs font-bold">
                 {workflowSteps[0].badge}
@@ -381,7 +384,7 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
         <div class="lg:col-span-5 rounded-2xl bg-white border border-[#222222]/12 p-6 sm:p-7 space-y-6">
           <div class="flex items-center justify-between pb-3 border-b border-[#222222]/10">
             <span class="font-mono text-xs font-bold uppercase text-[#222222]">TYPO3 Theme Options</span>
-            <span class="font-mono text-[10px] text-[#f7931e] font-semibold">INSTANT SYNC</span>
+            <span class="font-mono text-[10px] text-[#b45309] font-semibold">INSTANT SYNC</span>
           </div>
 
           <!-- Accent Color -->
@@ -447,8 +450,8 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
 
             <!-- Simulated Body -->
             <div class="p-6 space-y-3 my-auto">
-              <span class="font-mono text-[10px] uppercase tracking-wider text-[#8c8c8c]">Auto-Generated Next.js Page</span>
-              <h4 class="text-xl font-bold text-[#222222]">Managed 100% from TYPO3 Backend.</h4>
+              <span class="font-mono text-[10px] uppercase tracking-wider text-[#595959]">Auto-Generated Next.js Page</span>
+              <h3 class="text-xl font-bold text-[#222222]">Managed 100% from TYPO3 Backend.</h3>
               <p class="text-xs text-[#4e4e4e] leading-relaxed">
                 Logo dimensions, custom fonts, CSS/JS uploads, and global Header Pages update your Next.js storefront with zero manual frontend deployments.
               </p>
@@ -592,7 +595,7 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
           </h2>
           <div class="pt-2 space-y-2">
             <div class="flex items-center justify-between font-mono text-xs">
-              <span class="text-white/75">Custom Content Elements in your project:</span>
+              <span id="v2-calc-label" class="text-white/75">Custom Content Elements in your project:</span>
               <span id="v2-calc-count" class="text-[#f7931e] font-bold text-base">15 Elements</span>
             </div>
             <input
@@ -601,6 +604,7 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
               min="5"
               max="50"
               value="15"
+              aria-labelledby="v2-calc-label"
               class="w-full accent-[#f7931e] cursor-pointer"
             />
             <div class="flex justify-between font-mono text-[10px] text-white/45">
@@ -706,7 +710,7 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
                 <details class="group py-5" open={idx === 0}>
                   <summary class="flex items-center justify-between gap-4 cursor-pointer list-none font-display text-lg font-semibold text-[#222222] group-hover:text-[#f7931e] transition-colors">
                     <div class="flex items-center gap-4">
-                      <span class="font-mono text-xs text-[#f7931e] font-bold">{String(idx + 1).padStart(2, '0')}</span>
+                      <span class="font-mono text-xs text-[#b45309] font-bold">{String(idx + 1).padStart(2, '0')}</span>
                       <span>{item.q}</span>
                     </div>
                     <span class="w-8 h-8 rounded-full border border-[#d9d9d9] inline-flex items-center justify-center font-mono text-sm shrink-0 group-open:bg-[#222222] group-open:text-white group-open:border-[#222222] group-open:rotate-45 transition-all">
@@ -727,7 +731,7 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
               <p class="font-display font-bold text-sm text-[#222222]">
                 {isDe ? 'Möchten Sie mehr über Architektur, APIs und Caching erfahren?' : 'Looking for more answers on architecture, APIs, and caching?'}
               </p>
-              <p class="font-mono text-xs text-[#8c8c8c]">
+              <p class="font-mono text-xs text-[#595959]">
                 {isDe ? '12 weitere technische Fragen auf der FAQ-Übersichtsseite verfügbar.' : '12 more technical questions available on the dedicated FAQ page.'}
               </p>
             </div>
@@ -893,6 +897,19 @@ const displayedFaqs = allMergedFaqs.slice(0, 5);
               .join('');
           }
         });
+      });
+
+      // Arrow-key navigation between workflow tabs (WAI-ARIA tabs pattern)
+      explorer.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowDown' && e.key !== 'ArrowRight' && e.key !== 'ArrowUp' && e.key !== 'ArrowLeft') return;
+        const current = btns.indexOf(document.activeElement as HTMLButtonElement);
+        if (current === -1) return;
+        e.preventDefault();
+        const next = (e.key === 'ArrowDown' || e.key === 'ArrowRight')
+          ? (current + 1) % btns.length
+          : (current - 1 + btns.length) % btns.length;
+        btns[next]?.focus();
+        btns[next]?.click();
       });
     }
 

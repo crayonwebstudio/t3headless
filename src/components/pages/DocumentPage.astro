@@ -247,7 +247,7 @@ const techArticleSchema = {
         <!-- Sticky Chapter Navigation -->
         <aside class="lg:col-span-4 py-12 lg:pr-10">
           <div class="sticky top-24 space-y-6">
-            <p class="font-mono text-xs uppercase tracking-widest text-[#f7931e] font-bold">
+            <p class="font-mono text-xs uppercase tracking-widest text-[#b45309] font-bold">
               {isDe ? 'KAPITELÜBERSICHT' : 'DOCUMENTATION CHAPTERS'}
             </p>
             <nav class="space-y-2">
@@ -257,7 +257,7 @@ const techArticleSchema = {
                     href={`#${ch.id}`}
                     class="block p-3.5 rounded-2xl border border-[#222222]/12 bg-[#ffffff]/60 hover:bg-[#ffffff] hover:border-[#f7931e] transition-colors"
                   >
-                    <span class="block font-mono text-[11px] text-[#f7931e] font-semibold">
+                    <span class="block font-mono text-[11px] text-[#b45309] font-semibold">
                       {ch.code}
                     </span>
                     <span class="block font-semibold text-sm text-[#222222] mt-0.5">
@@ -285,7 +285,7 @@ const techArticleSchema = {
                   href={T3ELEMENT_LINKS.t3headlessTerUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-1.5 font-mono text-xs text-[#f7931e] hover:underline"
+                  class="inline-flex items-center gap-1.5 min-h-6 font-mono text-xs text-[#f7931e] hover:underline"
                 >
                   <span>{isDe ? 'TYPO3 Extension Repository' : 'TYPO3 Extension Repository'}</span>
                   <span aria-hidden="true">↗</span>
@@ -294,7 +294,7 @@ const techArticleSchema = {
                   href={T3ELEMENT_LINKS.docsGuideUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-1.5 font-mono text-xs text-white/85 hover:text-[#f7931e] transition-colors"
+                  class="inline-flex items-center gap-1.5 min-h-6 font-mono text-xs text-white/85 hover:text-[#f7931e] transition-colors"
                 >
                   <span>{isDe ? 'Offizielles Benutzerhandbuch' : 'Official User Guide'}</span>
                   <span aria-hidden="true">↗</span>
@@ -309,7 +309,7 @@ const techArticleSchema = {
           {
             chapters.map((ch) => (
               <article id={ch.id} class="py-10 first:pt-0 last:pb-0 space-y-5 scroll-mt-24">
-                <span class="font-mono text-xs font-bold text-[#f7931e]">{ch.code}</span>
+                <span class="font-mono text-xs font-bold text-[#b45309]">{ch.code}</span>
                 <h2 class="text-2xl sm:text-3xl font-bold text-[#222222]">{ch.title}</h2>
                 <p class="text-base text-[#4e4e4e] leading-relaxed">{ch.summary}</p>
                 <ul class="space-y-2 text-sm text-[#222222] bg-[#f7f7f7] rounded-2xl p-5 border border-[#222222]/10">

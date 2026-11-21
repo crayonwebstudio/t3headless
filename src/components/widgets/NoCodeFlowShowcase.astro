@@ -72,7 +72,7 @@ const stages = [
 >
   <!-- Top Bar: Element Preset Switcher + Play/Pause -->
   <div class="flex flex-wrap items-center justify-between gap-2.5">
-    <div class="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="Element type presets">
+    <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Element type presets">
       {
         presets.map((p, idx) => (
           <button
@@ -127,7 +127,7 @@ const stages = [
     <!-- Animated Stage Viewport -->
     <div class="relative z-10 p-5 sm:p-6 min-h-[290px] flex flex-col justify-between">
       <!-- STAGE 01: BUILD IN TYPO3 (NO CODE) -->
-      <div data-nc-panel="0" class="nc-stage-panel space-y-4">
+      <div data-nc-panel="0" id="nc-stage-panel-0" role="tabpanel" aria-labelledby="nc-stage-tab-0" class="nc-stage-panel space-y-4">
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-1.5 font-mono text-[10px]">
             <span class="px-2 py-1 rounded-md bg-white/10 text-white/60">1. Info</span>
@@ -185,7 +185,7 @@ const stages = [
       </div>
 
       <!-- STAGE 02: PLACE DIRECTLY ON TYPO3 PAGE -->
-      <div data-nc-panel="1" class="nc-stage-panel hidden space-y-4">
+      <div data-nc-panel="1" id="nc-stage-panel-1" role="tabpanel" aria-labelledby="nc-stage-tab-1" class="nc-stage-panel hidden space-y-4">
         <div class="flex items-center justify-between gap-2">
           <span class="font-mono text-[11px] text-white/80 font-semibold">
             TYPO3 Page Tree &gt; Normal Column
@@ -237,7 +237,7 @@ const stages = [
       </div>
 
       <!-- STAGE 03: AUTO-GENERATE IN NEXT.JS (ZERO FRONTEND CODE) -->
-      <div data-nc-panel="2" class="nc-stage-panel hidden space-y-4">
+      <div data-nc-panel="2" id="nc-stage-panel-2" role="tabpanel" aria-labelledby="nc-stage-tab-2" class="nc-stage-panel hidden space-y-4">
         <!-- Animated Laser Transfer Pipeline -->
         <div class="grid grid-cols-11 items-center gap-2 py-2">
           <div class="col-span-4 p-3 rounded-xl bg-[#252525] border border-white/15 text-center">
@@ -283,7 +283,7 @@ const stages = [
       </div>
 
       <!-- STAGE 04: LIVE NEXT.JS FRONTEND RENDER -->
-      <div data-nc-panel="3" class="nc-stage-panel hidden space-y-4">
+      <div data-nc-panel="3" id="nc-stage-panel-3" role="tabpanel" aria-labelledby="nc-stage-tab-3" class="nc-stage-panel hidden space-y-4">
         <div class="flex items-center justify-between">
           <span class="font-mono text-[10px] text-emerald-400 inline-flex items-center gap-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 nc-pulse-dot"></span>
@@ -294,7 +294,7 @@ const stages = [
 
         <div class="rounded-xl bg-white text-[#222222] p-4 space-y-3 shadow-inner nc-drop-in">
           <div class="flex items-center justify-between">
-            <h4 id="nc-live-title" class="text-xs font-bold text-[#222222]">Product Showcase Slider</h4>
+            <h3 id="nc-live-title" class="text-xs font-bold text-[#222222]">Product Showcase Slider</h3>
             <span class="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#f7931e]/15 text-[#c86a00] font-bold">
               Auto-Rendered
             </span>
@@ -329,6 +329,9 @@ const stages = [
         <button
           type="button"
           data-stage-btn={String(idx)}
+          role="tab"
+          id={`nc-stage-tab-${idx}`}
+          aria-controls={`nc-stage-panel-${idx}`}
           aria-selected={idx === 0 ? 'true' : 'false'}
           class="nc-stage-btn p-2.5 rounded-xl border text-left transition-all duration-200 cursor-pointer"
         >
@@ -442,7 +445,7 @@ const stages = [
     border-color: rgba(34, 34, 34, 0.35);
   }
   .nc-stage-btn .nc-stage-num {
-    color: #8c8c8c;
+    color: #595959;
   }
   .nc-stage-btn:hover .nc-stage-num {
     color: #222222;
