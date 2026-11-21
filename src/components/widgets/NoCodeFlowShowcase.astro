@@ -1,0 +1,659 @@
+---
+import { type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const isDe = locale === 'de';
+
+const presets = [
+  {
+    id: 'slider',
+    label: isDe ? 'Slider-Element' : 'Slider Element',
+    elementType: isDe ? 'Custom Element' : 'Custom Element',
+    fileName: 'SliderElement.tsx',
+    fields: ['Repeating: Slides', 'String: Title', 'File: Image', 'Link: CTA Button'],
+    markers: ['{_data?.slider_items}', '{__rcd?.title}', '<Nimage immg={...} />', '<Link href={...} />'],
+    pageAction: isDe ? '+ Slide hinzufügen (3 Slides)' : '+ Add Slide (3 slides)',
+    helpers: ['<All.Slider>', '<Nimage>', '<Link>'],
+    previewTitle: 'Product Showcase Slider',
+    previewCards: [
+      { title: 'T3Element Builder', tag: 'Slide 01', cta: 'Learn More' },
+      { title: 'Headless Core', tag: 'Slide 02', cta: 'Explore' },
+      { title: 'Next.js Edge', tag: 'Slide 03', cta: 'Deploy' },
+    ],
+  },
+  {
+    id: 'container',
+    label: isDe ? '3-Spalten Container' : '3-Col Container',
+    elementType: isDe ? 'Container Element' : 'Container Element',
+    fileName: 'ThreeColContainer.tsx',
+    fields: ['+ Col 501: Logo & Intro', '+ Col 502: Main Links', '+ Col 503: Contact Info'],
+    markers: ['{_data?.col_501}', '{_data?.col_502}', '{_data?.col_503}'],
+    pageAction: isDe ? '3 Spalten im Seitenbaum befüllt' : '3 columns populated in Page Tree',
+    helpers: ['renderElement()', 'className', 'Grid Auto-Sync'],
+    previewTitle: '3-Column Responsive Layout',
+    previewCards: [
+      { title: 'Logo & Intro', tag: 'col_501', cta: 'Col 1' },
+      { title: 'Navigation', tag: 'col_502', cta: 'Col 2' },
+      { title: 'Contact Details', tag: 'col_503', cta: 'Col 3' },
+    ],
+  },
+  {
+    id: 'cta',
+    label: isDe ? 'CTA-Banner' : 'CTA Card',
+    elementType: isDe ? 'Custom Element' : 'Custom Element',
+    fileName: 'CtaBanner.tsx',
+    fields: ['String: Eyebrow', 'Text: Headline', 'File: Hero Media', 'Link: Primary Action'],
+    markers: ['{_data?.eyebrow}', '{_data?.headline}', '<Nimage immg={...} />', '<Link href={...} />'],
+    pageAction: isDe ? 'CTA auf Startseite platziert' : 'CTA placed on Homepage',
+    helpers: ['<Link>', '<Nimage>', 'className'],
+    previewTitle: 'Enterprise Launch Banner',
+    previewCards: [
+      { title: 'Zero Frontend Coding', tag: 'Live CTA', cta: 'Get Started →' },
+    ],
+  },
+];
+
+const stages = [
+  { num: '01', key: 'build', label: isDe ? 'In TYPO3 bauen' : 'Build in TYPO3' },
+  { num: '02', key: 'place', label: isDe ? 'Auf Seite nutzen' : 'Use on Page' },
+  { num: '03', key: 'gen', label: isDe ? 'Auto-Generate' : 'Auto-Generate' },
+  { num: '04', key: 'live', label: isDe ? 'Live in Next.js' : 'Live in Next.js' },
+];
+---
+
+<div
+  id="nocode-flow-showcase"
+  class="w-full flex flex-col gap-4 select-none"
+  data-presets={JSON.stringify(presets)}
+>
+  <!-- Top Bar: Element Preset Switcher + Play/Pause -->
+  <div class="flex flex-wrap items-center justify-between gap-2.5">
+    <div class="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="Element type presets">
+      {
+        presets.map((p, idx) => (
+          <button
+            type="button"
+            data-preset-btn={p.id}
+            aria-pressed={idx === 0 ? 'true' : 'false'}
+            class="nc-preset-btn px-3 py-1 rounded-full font-mono text-[0.7rem] border transition-all duration-200 cursor-pointer"
+          >
+            {p.label}
+          </button>
+        ))
+      }
+    </div>
+
+    <button
+      type="button"
+      id="nc-autoplay-toggle"
+      class="px-2.5 py-1 rounded-full border border-[#d9d9d9] bg-white hover:border-[#222222] font-mono text-[0.68rem] text-[#4e4e4e] hover:text-[#222222] inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+      title="Toggle auto-play animation"
+    >
+      <span id="nc-autoplay-dot" class="w-1.5 h-1.5 rounded-full bg-[#f7931e] nc-pulse-dot"></span>
+      <span id="nc-autoplay-label">LIVE MOTION</span>
+    </button>
+  </div>
+
+  <!-- Main Interactive Stage Card -->
+  <div class="rounded-2xl bg-[#181818] text-white border border-[#222222] overflow-hidden shadow-xl relative">
+    <!-- Subtle Architectural Dot Grid -->
+    <div
+      class="pointer-events-none absolute inset-0 opacity-15"
+      style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 16px 16px;"
+    ></div>
+
+    <!-- Window Chrome Header -->
+    <div class="relative z-10 px-4 py-3 border-b border-white/10 bg-[#222222]/90 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
+        <span id="nc-window-path" class="ml-2 font-mono text-[10px] text-white/65 truncate">
+          Web &gt; T3headless &gt; Custom Elements
+        </span>
+      </div>
+      <span
+        id="nc-zero-code-pill"
+        class="px-2.5 py-0.5 rounded-full bg-[#f7931e]/15 border border-[#f7931e]/40 font-mono text-[10px] font-bold text-[#f7931e] shrink-0"
+      >
+        0 NEXT.JS CODE
+      </span>
+    </div>
+
+    <!-- Animated Stage Viewport -->
+    <div class="relative z-10 p-5 sm:p-6 min-h-[290px] flex flex-col justify-between">
+      <!-- STAGE 01: BUILD IN TYPO3 (NO CODE) -->
+      <div data-nc-panel="0" class="nc-stage-panel space-y-4">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5 font-mono text-[10px]">
+            <span class="px-2 py-1 rounded-md bg-white/10 text-white/60">1. Info</span>
+            <span class="px-2 py-1 rounded-md bg-[#f7931e] text-[#222222] font-bold">2. Fields</span>
+            <span class="px-2 py-1 rounded-md bg-white/10 text-white/60">3. Template</span>
+          </div>
+          <span class="font-mono text-[10px] text-white/55 uppercase">No-Code Drag &amp; Drop</span>
+        </div>
+
+        <!-- Animated Drag-and-Drop Fields List -->
+        <div id="nc-fields-list" class="grid grid-cols-2 gap-2">
+          <!-- Populated dynamically + SSR default -->
+          <div class="nc-chip-in p-2.5 rounded-xl bg-white/8 border border-white/12 flex items-center justify-between gap-2">
+            <span class="font-mono text-[11px] text-white">Repeating: Slides</span>
+            <span class="text-[#f7931e] text-xs font-bold">+</span>
+          </div>
+          <div class="nc-chip-in p-2.5 rounded-xl bg-white/8 border border-white/12 flex items-center justify-between gap-2" style="animation-delay: 80ms;">
+            <span class="font-mono text-[11px] text-white">String: Title</span>
+            <span class="text-[#f7931e] text-xs font-bold">+</span>
+          </div>
+          <div class="nc-chip-in p-2.5 rounded-xl bg-white/8 border border-white/12 flex items-center justify-between gap-2" style="animation-delay: 160ms;">
+            <span class="font-mono text-[11px] text-white">File: Image</span>
+            <span class="text-[#f7931e] text-xs font-bold">+</span>
+          </div>
+          <div class="nc-chip-in p-2.5 rounded-xl bg-white/8 border border-white/12 flex items-center justify-between gap-2" style="animation-delay: 240ms;">
+            <span class="font-mono text-[11px] text-white">Link: CTA Button</span>
+            <span class="text-[#f7931e] text-xs font-bold">+</span>
+          </div>
+        </div>
+
+        <!-- Interactive Click-to-Copy Field Markers -->
+        <div class="pt-3 border-t border-white/10 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-white/55">
+              {isDe ? 'Klickbare Feld-Marker (zum Kopieren klicken)' : 'Click-to-Copy Field Markers (Try clicking)'}
+            </span>
+            <span id="nc-marker-toast" class="font-mono text-[10px] text-[#f7931e] opacity-0 transition-opacity">
+              ✓ Marker Copied!
+            </span>
+          </div>
+          <div id="nc-markers-list" class="flex flex-wrap gap-1.5">
+            {
+              presets[0].markers.map((mk) => (
+                <button
+                  type="button"
+                  data-marker-copy={mk}
+                  class="px-2.5 py-1 rounded-lg bg-[#2a2a2a] hover:bg-[#f7931e] text-white/90 hover:text-[#222222] border border-white/15 hover:border-[#f7931e] font-mono text-[10px] transition-all cursor-pointer active:scale-95"
+                >
+                  {mk}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 02: PLACE DIRECTLY ON TYPO3 PAGE -->
+      <div data-nc-panel="1" class="nc-stage-panel hidden space-y-4">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-mono text-[11px] text-white/80 font-semibold">
+            TYPO3 Page Tree &gt; Normal Column
+          </span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 text-[#f7931e] font-mono text-[10px] font-bold">
+            + Create new content
+          </span>
+        </div>
+
+        <div class="rounded-xl bg-[#242424] border border-dashed border-[#f7931e]/55 p-4 space-y-3 nc-drop-in">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-[#f7931e] text-[#222222] font-mono text-xs font-extrabold inline-flex items-center justify-center">
+                T3
+              </span>
+              <div>
+                <p id="nc-page-el-name" class="text-xs font-bold text-white">Slider Element</p>
+                <p id="nc-page-el-action" class="font-mono text-[10px] text-white/60">+ Add Slide (3 slides)</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px]">
+              Saved ✓
+            </span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 pt-1">
+            <div class="p-2 rounded-lg bg-white/6 border border-white/10 font-mono text-[10px] text-white/80">
+              <span class="block text-[#f7931e] text-[9px]">ITEM 01</span>
+              Title + Image
+            </div>
+            <div class="p-2 rounded-lg bg-white/6 border border-white/10 font-mono text-[10px] text-white/80">
+              <span class="block text-[#f7931e] text-[9px]">ITEM 02</span>
+              Title + Image
+            </div>
+            <div class="p-2 rounded-lg bg-white/6 border border-white/10 font-mono text-[10px] text-white/80">
+              <span class="block text-[#f7931e] text-[9px]">ITEM 03</span>
+              Title + Image
+            </div>
+          </div>
+        </div>
+
+        <p class="font-mono text-[11px] text-white/65">
+          {
+            isDe
+              ? 'Redakteure fügen das neue Element wie jedes Standard-TYPO3-Element ein und speichern.'
+              : 'Editors drop the new element onto any TYPO3 page, fill fields, and hit Save.'
+          }
+        </p>
+      </div>
+
+      <!-- STAGE 03: AUTO-GENERATE IN NEXT.JS (ZERO FRONTEND CODE) -->
+      <div data-nc-panel="2" class="nc-stage-panel hidden space-y-4">
+        <!-- Animated Laser Transfer Pipeline -->
+        <div class="grid grid-cols-11 items-center gap-2 py-2">
+          <div class="col-span-4 p-3 rounded-xl bg-[#252525] border border-white/15 text-center">
+            <span class="block font-mono text-[9px] text-[#f7931e] uppercase">TYPO3 Schema</span>
+            <span id="nc-gen-source" class="block text-xs font-bold text-white mt-0.5 truncate">Slider Element</span>
+          </div>
+
+          <div class="col-span-3 relative flex flex-col items-center justify-center">
+            <div class="w-full h-[2px] bg-white/15 relative overflow-hidden rounded-full">
+              <div class="h-full w-1/2 bg-gradient-to-r from-transparent via-[#f7931e] to-white nc-beam-flow"></div>
+            </div>
+            <span class="mt-1.5 px-2 py-0.5 rounded-full bg-[#f7931e] text-[#222222] font-mono text-[9px] font-extrabold whitespace-nowrap">
+              AUTO-GEN
+            </span>
+          </div>
+
+          <div class="col-span-4 p-3 rounded-xl bg-[#252525] border border-[#f7931e]/60 text-center nc-glow-box">
+            <span class="block font-mono text-[9px] text-emerald-400 uppercase">Next.js Created</span>
+            <span id="nc-gen-file" class="block font-mono text-[11px] font-bold text-white mt-0.5 truncate">SliderElement.tsx</span>
+          </div>
+        </div>
+
+        <!-- Auto-Generated Component Summary -->
+        <div class="rounded-xl bg-[#111111] border border-white/10 p-3.5 space-y-2.5">
+          <div class="flex items-center justify-between font-mono text-[10px]">
+            <span class="text-white/60">$ yarn themebuild</span>
+            <span class="text-emerald-400 font-semibold">✓ Component generated automatically</span>
+          </div>
+          <div id="nc-gen-helpers" class="flex flex-wrap gap-1.5">
+            <span class="px-2 py-0.5 rounded bg-white/10 font-mono text-[10px] text-[#f7931e]">&lt;All.Slider&gt;</span>
+            <span class="px-2 py-0.5 rounded bg-white/10 font-mono text-[10px] text-white">&lt;Nimage&gt;</span>
+            <span class="px-2 py-0.5 rounded bg-white/10 font-mono text-[10px] text-white">&lt;Link&gt;</span>
+          </div>
+        </div>
+
+        <p class="font-mono text-[11px] text-[#f7931e]">
+          {
+            isDe
+              ? 'Kein Öffnen von Next.js nötig. Kein manuelles Schreiben von React-Render-Code.'
+              : 'No need to open Next.js or hand-code a single rendering component.'
+          }
+        </p>
+      </div>
+
+      <!-- STAGE 04: LIVE NEXT.JS FRONTEND RENDER -->
+      <div data-nc-panel="3" class="nc-stage-panel hidden space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-[10px] text-emerald-400 inline-flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 nc-pulse-dot"></span>
+            <span>NEXT.JS FRONTEND LIVE RENDER</span>
+          </span>
+          <span class="font-mono text-[10px] text-white/55">100/100 CWV • SSR</span>
+        </div>
+
+        <div class="rounded-xl bg-white text-[#222222] p-4 space-y-3 shadow-inner nc-drop-in">
+          <div class="flex items-center justify-between">
+            <h4 id="nc-live-title" class="text-xs font-bold text-[#222222]">Product Showcase Slider</h4>
+            <span class="font-mono text-[9px] px-2 py-0.5 rounded-full bg-[#f7931e]/15 text-[#c86a00] font-bold">
+              Auto-Rendered
+            </span>
+          </div>
+          <div id="nc-live-cards" class="grid grid-cols-3 gap-2">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <p class="font-mono text-[10px] text-white/65">
+          {
+            isDe
+              ? 'Direkt gerendert auf Ihrem Next.js-Frontend mit 0 Zeilen handgeschriebenem Frontend-Code.'
+              : 'Rendered live on your Next.js frontend with 0 lines of hand-written rendering code.'
+          }
+        </p>
+      </div>
+
+      <!-- Animated Progress Track -->
+      <div class="mt-4 pt-3 border-t border-white/10">
+        <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+          <div id="nc-progress-bar" class="h-full bg-[#f7931e] transition-all duration-300" style="width: 25%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom 4 Interactive Stage Selector Buttons -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" role="tablist" aria-label="Workflow stages">
+    {
+      stages.map((st, idx) => (
+        <button
+          type="button"
+          data-stage-btn={String(idx)}
+          aria-selected={idx === 0 ? 'true' : 'false'}
+          class="nc-stage-btn p-2.5 rounded-xl border text-left transition-all duration-200 cursor-pointer"
+        >
+          <span class="nc-stage-num block font-mono text-[10px] font-bold">
+            {st.num}
+          </span>
+          <span class="nc-stage-label block text-[11px] font-semibold leading-tight mt-0.5 truncate">{st.label}</span>
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  @keyframes ncChipIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes ncBeamFlow {
+    0% {
+      transform: translateX(-120%);
+    }
+    100% {
+      transform: translateX(260%);
+    }
+  }
+
+  @keyframes ncPulseDot {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.45;
+      transform: scale(1.3);
+    }
+  }
+
+  @keyframes ncGlowBox {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(247, 147, 30, 0.25);
+    }
+    50% {
+      box-shadow: 0 0 18px 2px rgba(247, 147, 30, 0.35);
+    }
+  }
+
+  .nc-chip-in {
+    animation: ncChipIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .nc-drop-in {
+    animation: ncChipIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .nc-beam-flow {
+    animation: ncBeamFlow 1.5s linear infinite;
+  }
+
+  .nc-pulse-dot {
+    animation: ncPulseDot 1.8s ease-in-out infinite;
+  }
+
+  .nc-glow-box {
+    animation: ncGlowBox 2.2s ease-in-out infinite;
+  }
+
+  /* Element Preset Switcher Styles & Safe Hover */
+  .nc-preset-btn {
+    background-color: #ffffff;
+    color: #4e4e4e;
+    border-color: #d9d9d9;
+    font-weight: 500;
+  }
+  .nc-preset-btn:hover {
+    background-color: #f7f7f7;
+    color: #222222;
+    border-color: #222222;
+  }
+  .nc-preset-btn[aria-pressed="true"] {
+    background-color: #222222 !important;
+    color: #ffffff !important;
+    border-color: #222222 !important;
+    font-weight: 600;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+  }
+  .nc-preset-btn[aria-pressed="true"]:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+  }
+
+  /* Stage Selector Styles & Safe Hover */
+  .nc-stage-btn {
+    background-color: #f7f7f7;
+    color: #4e4e4e;
+    border-color: rgba(34, 34, 34, 0.1);
+  }
+  .nc-stage-btn:hover {
+    background-color: #ffffff;
+    color: #222222;
+    border-color: rgba(34, 34, 34, 0.35);
+  }
+  .nc-stage-btn .nc-stage-num {
+    color: #8c8c8c;
+  }
+  .nc-stage-btn:hover .nc-stage-num {
+    color: #222222;
+  }
+  .nc-stage-btn[aria-selected="true"] {
+    background-color: #222222 !important;
+    color: #ffffff !important;
+    border-color: #222222 !important;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+  }
+  .nc-stage-btn[aria-selected="true"]:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+  }
+  .nc-stage-btn[aria-selected="true"] .nc-stage-num {
+    color: #f7931e !important;
+  }
+  .nc-stage-btn[aria-selected="true"] .nc-stage-label {
+    color: #ffffff !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nc-chip-in,
+    .nc-drop-in,
+    .nc-beam-flow,
+    .nc-pulse-dot,
+    .nc-glow-box {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  interface PresetItem {
+    id: string;
+    label: string;
+    elementType: string;
+    fileName: string;
+    fields: string[];
+    markers: string[];
+    pageAction: string;
+    helpers: string[];
+    previewTitle: string;
+    previewCards: { title: string; tag: string; cta: string }[];
+  }
+
+  function initNoCodeFlow() {
+    const root = document.getElementById('nocode-flow-showcase');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const presets: PresetItem[] = JSON.parse(root.dataset.presets || '[]');
+    if (!presets.length) return;
+
+    const presetBtns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-preset-btn]'));
+    const stageBtns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-stage-btn]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-nc-panel]'));
+    const progressBar = document.getElementById('nc-progress-bar');
+    const windowPath = document.getElementById('nc-window-path');
+    const autoplayBtn = document.getElementById('nc-autoplay-toggle');
+    const autoplayLabel = document.getElementById('nc-autoplay-label');
+    const autoplayDot = document.getElementById('nc-autoplay-dot');
+
+    const fieldsList = document.getElementById('nc-fields-list');
+    const markersList = document.getElementById('nc-markers-list');
+    const markerToast = document.getElementById('nc-marker-toast');
+    const pageElName = document.getElementById('nc-page-el-name');
+    const pageElAction = document.getElementById('nc-page-el-action');
+    const genSource = document.getElementById('nc-gen-source');
+    const genFile = document.getElementById('nc-gen-file');
+    const genHelpers = document.getElementById('nc-gen-helpers');
+    const liveTitle = document.getElementById('nc-live-title');
+    const liveCards = document.getElementById('nc-live-cards');
+
+    const stagePaths = [
+      'Web > T3headless > Elements > Create',
+      'Web > Page > + Create new content',
+      't3headless-frontend > yarn themebuild',
+      'https://example.com (Next.js Live)',
+    ];
+
+    let activePresetIdx = 0;
+    let activeStageIdx = 0;
+    let isPlaying = true;
+    let isHovered = false;
+    let toastTimer: number | undefined;
+
+    function bindMarkerButtons() {
+      const mBtns = root?.querySelectorAll<HTMLButtonElement>('[data-marker-copy]');
+      mBtns?.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (markerToast) {
+            markerToast.textContent = `✓ Copied ${btn.dataset.markerCopy}`;
+            markerToast.style.opacity = '1';
+            window.clearTimeout(toastTimer);
+            toastTimer = window.setTimeout(() => {
+              if (markerToast) markerToast.style.opacity = '0';
+            }, 1800);
+          }
+        });
+      });
+    }
+
+    function renderPreset(p: PresetItem) {
+      if (fieldsList) {
+        fieldsList.innerHTML = p.fields
+          .map(
+            (f, i) => `
+          <div class="nc-chip-in p-2.5 rounded-xl bg-white/8 border border-white/12 flex items-center justify-between gap-2" style="animation-delay:${i * 75}ms">
+            <span class="font-mono text-[11px] text-white truncate">${f}</span>
+            <span class="text-[#f7931e] text-xs font-bold shrink-0">+</span>
+          </div>`
+          )
+          .join('');
+      }
+
+      if (markersList) {
+        markersList.innerHTML = p.markers
+          .map(
+            (mk) => `
+          <button type="button" data-marker-copy="${mk.replace(/"/g, '&quot;')}" class="px-2.5 py-1 rounded-lg bg-[#2a2a2a] hover:bg-[#f7931e] text-white/90 hover:text-[#222222] border border-white/15 hover:border-[#f7931e] font-mono text-[10px] transition-all cursor-pointer active:scale-95">
+            ${mk.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+          </button>`
+          )
+          .join('');
+        bindMarkerButtons();
+      }
+
+      if (pageElName) pageElName.textContent = p.label;
+      if (pageElAction) pageElAction.textContent = p.pageAction;
+      if (genSource) genSource.textContent = p.label;
+      if (genFile) genFile.textContent = p.fileName;
+
+      if (genHelpers) {
+        genHelpers.innerHTML = p.helpers
+          .map(
+            (h, idx) =>
+              `<span class="px-2 py-0.5 rounded bg-white/10 font-mono text-[10px] ${idx === 0 ? 'text-[#f7931e]' : 'text-white'}">${h.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`
+          )
+          .join('');
+      }
+
+      if (liveTitle) liveTitle.textContent = p.previewTitle;
+      if (liveCards) {
+        const cols = p.previewCards.length === 1 ? 'grid-cols-1' : 'grid-cols-3';
+        liveCards.className = `grid ${cols} gap-2`;
+        liveCards.innerHTML = p.previewCards
+          .map(
+            (c) => `
+          <div class="p-2.5 rounded-lg bg-[#f7f7f7] border border-[#222222]/10 space-y-1.5 hover:border-[#f7931e] transition-colors">
+            <span class="block font-mono text-[9px] text-[#f7931e] font-bold uppercase">${c.tag}</span>
+            <p class="text-[11px] font-bold text-[#222222] leading-tight">${c.title}</p>
+            <span class="inline-block px-2 py-0.5 rounded bg-[#222222] text-white font-mono text-[9px]">${c.cta}</span>
+          </div>`
+          )
+          .join('');
+      }
+    }
+
+    function setStage(idx: number) {
+      activeStageIdx = idx;
+      panels.forEach((panel, i) => {
+        panel.classList.toggle('hidden', i !== idx);
+      });
+      stageBtns.forEach((btn, i) => {
+        btn.setAttribute('aria-selected', String(i === idx));
+      });
+      if (progressBar) progressBar.style.width = `${((idx + 1) / stages.length) * 100}%`;
+      if (windowPath) windowPath.textContent = stagePaths[idx] || stagePaths[0];
+    }
+
+    presetBtns.forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        activePresetIdx = idx;
+        presetBtns.forEach((b, i) => {
+          b.setAttribute('aria-pressed', String(i === idx));
+        });
+        renderPreset(presets[idx]);
+      });
+    });
+
+    stageBtns.forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        setStage(idx);
+      });
+    });
+
+    autoplayBtn?.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      if (autoplayLabel) autoplayLabel.textContent = isPlaying ? 'LIVE MOTION' : 'PAUSED';
+      if (autoplayDot) autoplayDot.classList.toggle('opacity-30', !isPlaying);
+    });
+
+    root.addEventListener('mouseenter', () => {
+      isHovered = true;
+    });
+    root.addEventListener('mouseleave', () => {
+      isHovered = false;
+    });
+
+    const stages = stageBtns;
+    renderPreset(presets[0]);
+    setStage(0);
+
+    setInterval(() => {
+      if (!isPlaying || isHovered || !document.body.contains(root)) return;
+      setStage((activeStageIdx + 1) % stages.length);
+    }, 3600);
+  }
+
+  initNoCodeFlow();
+  document.addEventListener('astro:page-load', initNoCodeFlow);
+</script>

@@ -1,0 +1,134 @@
+---
+import { SITE_CONTENT, ROUTES, T3ELEMENT_LINKS, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const content = SITE_CONTENT[locale];
+const routes = ROUTES[locale];
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const navItems = [
+  { label: content.nav.builtWith, href: routes.builtWith, external: false },
+  { label: content.nav.document, href: routes.document, external: false },
+  { label: content.nav.support, href: routes.supportTicket, external: false },
+  { label: 'T3Element', href: T3ELEMENT_LINKS.siteUrl, external: true },
+];
+
+const isHome = currentPath === routes.home;
+---
+
+<!-- T3Element Frosted Charcoal Floating Bottom Dock -->
+<nav
+  aria-label="Primary Navigation Dock"
+  class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 max-w-[96vw]"
+>
+  <div class="uxis-dock rounded-full p-1.5 flex items-center gap-1 text-white">
+    <!-- Home Icon Pill -->
+    <a
+      href={routes.home}
+      aria-label={content.nav.home}
+      class:list={[
+        'w-10 h-10 rounded-full inline-flex items-center justify-center transition-all shrink-0',
+        isHome
+          ? 'bg-white/18 text-white'
+          : 'bg-white/8 text-white/80 hover:bg-white/16 hover:text-white',
+      ]}
+    >
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1v-9.5Z" />
+      </svg>
+    </a>
+
+    <!-- Desktop Links -->
+    <div class="hidden md:flex items-center gap-0.5 px-1">
+      {
+        navItems.map((item) => {
+          const active = !item.external && (currentPath === item.href || currentPath.startsWith(item.href + '/'));
+          return (
+            <a
+              href={item.href}
+              target={item.external ? '_blank' : undefined}
+              rel={item.external ? 'noopener noreferrer' : undefined}
+              class:list={[
+                'px-3.5 py-2 rounded-full text-xs lg:text-[13px] font-medium whitespace-nowrap transition-all inline-flex items-center gap-1',
+                active
+                  ? 'bg-white/18 text-white font-semibold'
+                  : 'text-white/80 hover:bg-white/10 hover:text-white',
+              ]}
+            >
+              <span>{item.label}</span>
+              {item.external && <span aria-hidden="true" class="text-[11px] opacity-70">↗</span>}
+            </a>
+          );
+        })
+      }
+    </div>
+
+    <!-- Mobile Menu Trigger -->
+    <button
+      id="uxis-mobile-menu-btn"
+      type="button"
+      class="md:hidden px-3.5 py-2 rounded-full text-xs font-mono uppercase tracking-wider text-white/90 hover:bg-white/10 inline-flex items-center gap-1.5"
+      aria-expanded="false"
+      aria-controls="uxis-mobile-drawer"
+    >
+      <span>Menu</span>
+    </button>
+
+    <!-- Primary Crisp White Capsule CTA (T3Element dock__cta style) -->
+    <a
+      href={routes.contact}
+      class="px-4 sm:px-5 py-2.5 rounded-full bg-white hover:bg-[#f7931e] text-[#222222] hover:text-white font-semibold text-xs lg:text-[13px] whitespace-nowrap inline-flex items-center gap-1.5 transition-all shrink-0"
+    >
+      <span>{content.nav.contactCta}</span>
+      <span aria-hidden="true" class="text-sm leading-none">→</span>
+    </a>
+  </div>
+
+  <!-- Mobile Popover Drawer above the Dock -->
+  <div
+    id="uxis-mobile-drawer"
+    class="hidden md:hidden absolute bottom-16 left-1/2 -translate-x-1/2 w-[88vw] max-w-sm rounded-3xl uxis-dock p-4 text-white"
+  >
+    <div class="flex flex-col divide-y divide-white/10">
+      {
+        navItems.map((item) => {
+          const active = !item.external && currentPath === item.href;
+          return (
+            <a
+              href={item.href}
+              target={item.external ? '_blank' : undefined}
+              rel={item.external ? 'noopener noreferrer' : undefined}
+              class:list={[
+                'py-3 px-3 flex items-center justify-between text-sm font-medium rounded-xl transition-colors',
+                active ? 'text-[#f7931e] font-semibold' : 'text-white/90 hover:text-white',
+              ]}
+            >
+              <span>{item.label}</span>
+              <span aria-hidden="true" class="text-xs opacity-60">↗</span>
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</nav>
+
+<script>
+  function initMobileDock() {
+    const btn = document.getElementById('uxis-mobile-menu-btn');
+    const drawer = document.getElementById('uxis-mobile-drawer');
+    if (!btn || !drawer) return;
+
+    btn.onclick = () => {
+      const isHidden = drawer.classList.contains('hidden');
+      drawer.classList.toggle('hidden', !isHidden);
+      btn.setAttribute('aria-expanded', String(isHidden));
+    };
+  }
+  initMobileDock();
+  document.addEventListener('astro:page-load', initMobileDock);
+</script>

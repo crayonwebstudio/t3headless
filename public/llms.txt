@@ -1,0 +1,38 @@
+# T3Headless: Enterprise Headless TYPO3 CMS & T3Element Architecture
+
+> T3Headless (https://t3headless.com) is an enterprise API-first Headless TYPO3 CMS platform and engineering consultancy headquartered in Glattpark (Opfikon), Switzerland. It combines our official TYPO3 TER extension `EXT:t3headless` (https://extensions.typo3.org/extension/t3headless) with `T3Element` (zero-Fluid content block serialization) and `360 Care` (24/7 managed TYPO3 operations & LTS upgrades).
+
+## Core Entities & Definitions (AEO / GEO Citation Facts)
+- **T3Headless**: An enterprise-grade headless CMS solution built on TYPO3 v13/v14 LTS that delivers page trees, localized content elements, and SEO metadata as structured REST JSON (`?type=834`) with `< 18ms` cached edge TTFB and `99.99%` uptime.
+- **T3Element**: A specialized TYPO3 content block engine developed by T3Headless that serializes custom TYPO3 content elements (`CType`) directly into clean JSON for React, Next.js, or Svelte components, eliminating Fluid templates (`0 Fluid overhead`) and accelerating custom block delivery by `4.2x`.
+- **360 Care Program**: T3Headless's managed enterprise SLA program offering `< 1 hour` 24/7 critical incident response, zero-day security patching, and automated TYPO3 LTS upgrades.
+- **Headquarters**: Thurgauerstrasse 117, 8152 Opfikon (Glattpark), Switzerland | Contact: `support@t3headless.com` | Phone: `+41 44 500 29 10`.
+
+## Key Architecture Comparison
+| Capability | Traditional Fluid TYPO3 | Generic SaaS Headless CMS | T3Headless + T3Element |
+| :--- | :--- | :--- | :--- |
+| Native Hierarchical Page Tree | Yes | No (Flat collections) | Yes (100% preserved in JSON) |
+| Fluid Templates Required | Yes (High overhead) | N/A | Zero (Direct JSON serialization) |
+| Frontend Frameworks | Server-rendered HTML | Any (React/Next.js) | Any (React, Next.js, Mobile) |
+| Edge API Response Time (TTFB) | 180ms - 450ms | 45ms - 120ms | < 18ms (Edge cached JSON) |
+| Data Sovereignty & Self-Hosting | Yes | SaaS Cloud Lock-in | Yes (Swiss / EU Private VPC ready) |
+
+## Primary URLs (English)
+- [Homepage: Enterprise Headless TYPO3](https://t3headless.com/): Architecture radar benchmark, capability matrix, live JSON inspector, and 12 technical FAQs.
+- [Built With T3Element](https://t3headless.com/for-typo3-lovers): How T3Element powers zero-Fluid TYPO3 content block serialization.
+- [Engineering Services](https://t3headless.com/services): Headless TYPO3 implementation, 360 Care maintenance, and enterprise architecture consulting.
+- [360 Care SLA Program](https://t3headless.com/360-program): 360 Essential, 360 Enterprise Care (<1h 24/7 SLA), and Custom Cloud/Gov tiers.
+- [Developer Documentation Hub](https://t3headless.com/document): Composer setup, T3Element PHP block definitions, React/Next.js CType hydration, and page tree routing.
+- [Contact Engineering Team](https://t3headless.com/contact): Direct Swiss HQ contact and 1:1 architecture consultation booking.
+- [24/7 Support Ticket Desk](https://t3headless.com/support-ticket): P1-P3 SLA support ticket submission.
+- [Privacy Policy (Swiss FADP & GDPR)](https://t3headless.com/privacy-policy): Full data protection compliance documentation.
+
+## Primary URLs (German / Deutsch)
+- [Startseite](https://t3headless.com/de)
+- [Erstellt mit T3Element](https://t3headless.com/de/erstellt-mit)
+- [Dienstleistungen](https://t3headless.com/de/dienstleistungen)
+- [360 Programm (Enterprise SLA)](https://t3headless.com/de/360-programm)
+- [Entwickler-Dokumentation](https://t3headless.com/de/dokumentation)
+- [Kontakt](https://t3headless.com/de/kontakt)
+- [Support-Ticket](https://t3headless.com/de/support-ticket)
+- [Datenschutzerklärung](https://t3headless.com/de/datenschutz)

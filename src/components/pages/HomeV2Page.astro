@@ -1,0 +1,975 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NoCodeFlowShowcase from '../widgets/NoCodeFlowShowcase.astro';
+import { SITE_CONTENT, ROUTES, T3ELEMENT_LINKS, MERGED_FAQS, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const content = SITE_CONTENT[locale];
+const routes = ROUTES[locale];
+const isDe = locale === 'de';
+
+const workflowSteps = [
+  {
+    num: '01',
+    title: 'Create Custom & Container Elements in TYPO3',
+    badge: 'NO CODING REQUIRED',
+    path: 'Web > T3headless > Elements',
+    summary:
+      'Use the 3-tab visual wizard (Info, Fields, Template) inside TYPO3. Drag and drop String, Text, File, Link, or Repeating fields for sliders and accordions, or add multi-column Container layouts with "+ Add Column".',
+    highlights: ['Custom Elements & Container Columns', 'Repeating Field Groups for Sliders & FAQs', 'Zero TCA, TypoScript, or Fluid Boilerplate'],
+    terminal: 'TYPO3 Backend -> + Create New Element -> Drag Fields -> Save',
+  },
+  {
+    num: '02',
+    title: 'Auto-Generated Template & Click-to-Copy Markers',
+    badge: 'SAFE VISUAL EDITING',
+    path: 'Elements > Template Tab',
+    summary:
+      'T3Headless generates a ready-to-use React/Next.js template automatically. Need to add a new field later? Your template is never overwritten: simply click the new Field Marker to copy and paste it anywhere.',
+    highlights: ['One-Click "Marker Copied!" Field Helpers', 'Built-In <Link>, <Nimage>, <All.Slider>, <All.Accordion>', 'Safe Edit & Delete Warnings When In Use'],
+    terminal: 'Click Marker: {_data?.headline} -> "Marker Copied!" -> Paste',
+  },
+  {
+    num: '03',
+    title: 'Place Directly on Any TYPO3 Page',
+    badge: 'NATIVE EDITOR UX',
+    path: 'Web > Page > + Create new content',
+    summary:
+      'Editors immediately pick the newly created element from the TYPO3 content wizard, add slides or columns (like "+ Add Slide"), fill in text and media, and save inside the familiar TYPO3 page tree.',
+    highlights: ['Native TYPO3 Page Tree Preserved 100%', 'Standard FAL Media & Multi-Language Support', 'Works on New or Existing Pages Instantly'],
+    terminal: 'Web > Page > Normal Column > + Create new content -> Save',
+  },
+  {
+    num: '04',
+    title: 'Auto-Generated Next.js Component (Zero Frontend Code)',
+    badge: 'CORE USP',
+    path: 't3headless-frontend',
+    summary:
+      'You never need to open the Next.js codebase and hand-code rendering components. Running yarn themebuild syncs your TYPO3 elements and auto-generates the production Next.js components automatically.',
+    highlights: ['0 Lines of Manual Next.js Rendering Code', 'Automatic Component & Style Generation', '100/100 Core Web Vitals & Edge SSR Ready'],
+    terminal: '$ yarn themebuild  ->  ✓ Generated SliderElement.tsx & styles',
+  },
+  {
+    num: '05',
+    title: 'Manage Global Theme Options Without Deployments',
+    badge: 'GLOBAL CONTROL',
+    path: 'T3headless > Theme Options > Header',
+    summary:
+      'Upload your Logo (with custom width and height), Favicon, Custom Fonts, CSS, and JS files, or assign a global Header Page directly from the TYPO3 backend.',
+    highlights: ['Logo, Favicon & Custom Dimensions', 'Custom Font, CSS & JS Uploads', 'Global Header & Footer Page Overrides'],
+    terminal: 'Theme Options > Header -> Upload Logo & Fonts -> Save Changes',
+  },
+];
+
+const allMergedFaqs = MERGED_FAQS[locale];
+const displayedFaqs = allMergedFaqs.slice(0, 5);
+---
+
+<BaseLayout
+  locale={locale}
+  title={
+    isDe
+      ? 'T3Headless - Enterprise Headless TYPO3 CMS & T3Element Lösungen'
+      : 'T3Headless - Enterprise Headless TYPO3 CMS & T3Element Solutions'
+  }
+  description={content.meta.description}
+>
+  <!-- SECTION 1: INTERACTIVE MOTION HERO -->
+  <section class="w-full bg-white">
+    <div class="swiss-container">
+      <div class="grid grid-cols-1 lg:grid-cols-12 border-b border-[#222222]/12 relative divide-y lg:divide-y-0 lg:divide-x divide-[#222222]/12">
+        <span class="crosshair crosshair--tl" aria-hidden="true"></span>
+        <span class="crosshair crosshair--tc" aria-hidden="true"></span>
+        <span class="crosshair crosshair--tr" aria-hidden="true"></span>
+        <span class="crosshair crosshair--bl" aria-hidden="true"></span>
+        <span class="crosshair crosshair--bc" aria-hidden="true"></span>
+        <span class="crosshair crosshair--br" aria-hidden="true"></span>
+
+        <!-- Left Column: Brand-New Interactive Motion Infographic -->
+        <div class="lg:col-span-6 p-6 sm:p-10 lg:p-12 flex flex-col justify-center">
+          <NoCodeFlowShowcase locale={locale} />
+        </div>
+
+        <!-- Right Column: Core USP Headline + Demo Form -->
+        <div class="lg:col-span-6 p-6 sm:p-10 lg:p-12 flex flex-col justify-between space-y-8">
+          <div class="space-y-5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="uxis-pill uxis-pill-orange font-mono text-[0.72rem] uppercase tracking-wider">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#f7931e] animate-pulse" aria-hidden="true"></span>
+                <span>NO-CODE HEADLESS TYPO3 + NEXT.JS</span>
+              </span>
+              <span class="px-2.5 py-1 rounded-full bg-[#222222] text-white font-mono text-[0.68rem] uppercase font-semibold">
+                {isDe ? 'OFFIZIELLE LÖSUNG' : 'OFFICIAL SOLUTION'}
+              </span>
+            </div>
+
+            <h1 class="display-hero text-[#222222]">
+              {
+                isDe
+                  ? 'TYPO3-Elemente ohne Code erstellen. Automatisch in Next.js gerendert.'
+                  : 'Create TYPO3 elements with zero code. Auto-generated in Next.js.'
+              }
+            </h1>
+
+            <p class="text-base sm:text-[1.05rem] text-[#4e4e4e] max-w-xl leading-relaxed">
+              {
+                isDe
+                  ? 'Erstellen Sie eigene Inhaltselemente und mehrspaltige Container visuell in TYPO3, platzieren Sie sie auf beliebigen Seiten und lassen Sie T3Headless die Next.js-Komponenten automatisch generieren.'
+                  : 'Build Custom Elements and multi-column Containers visually inside TYPO3, drop them onto any page, and let T3Headless generate the Next.js component automatically. You never need to open Next.js to write rendering code.'
+              }
+            </p>
+
+            <div class="flex flex-wrap gap-2 pt-1">
+              <span class="uxis-pill font-mono text-[0.72rem] uppercase">TYPO3 v13 / v14 LTS</span>
+              <span class="uxis-pill font-mono text-[0.72rem] uppercase">{isDe ? 'Kein Next.js-Code nötig' : 'Zero Next.js Coding'}</span>
+              <span class="uxis-pill font-mono text-[0.72rem] uppercase">EXT:t3headless</span>
+            </div>
+          </div>
+
+          <div class="space-y-6 pt-2">
+            <!-- Inline Demo Form (CRM Wired) -->
+            <form
+              id="hero-v2-demo-form"
+              class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2"
+              data-locale={locale}
+            >
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder={isDe ? 'Ihre geschäftliche E-Mail' : 'Your work email'}
+                class="uxis-input flex-1"
+              />
+              <button id="hero-v2-demo-btn" type="submit" class="uxis-cta-btn shrink-0 disabled:opacity-60">
+                <span id="hero-v2-demo-label">{isDe ? 'Demo anfordern' : 'Get a demo'}</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </form>
+            <p id="hero-v2-demo-msg" class="hidden font-mono text-xs text-[#222222]"></p>
+
+            <!-- Quick Install Strip + Links -->
+            <div class="pt-5 border-t border-[#222222]/12 flex flex-wrap items-center justify-between gap-4">
+              <div class="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  id="v2-copy-composer"
+                  class="px-3.5 py-2 rounded-full bg-[#f7f7f7] hover:bg-[#222222] text-[#222222] hover:text-white border border-[#222222]/15 font-mono text-xs inline-flex items-center gap-2 transition-all cursor-pointer active:scale-95"
+                  data-cmd={T3ELEMENT_LINKS.t3headlessComposerCmd}
+                >
+                  <span id="v2-composer-text">{T3ELEMENT_LINKS.t3headlessComposerCmd}</span>
+                  <span class="text-[#f7931e] font-bold">⧉</span>
+                </button>
+
+                <a
+                  href={content.meta.calLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-xs font-mono text-[#4e4e4e] hover:text-[#222222] transition-colors inline-flex items-center gap-1.5"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#f7931e]"></span>
+                  <span>{content.hero.consultationBadge} ↗</span>
+                </a>
+              </div>
+
+              <a
+                href={routes.document}
+                class="uxis-underline text-sm font-semibold text-[#222222] inline-flex items-center gap-1.5"
+              >
+                <span>{isDe ? 'Schnellstart-Dokumentation' : 'Read Quickstart Docs'}</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: KINETIC 3-STAGE MOTION RAIL ("CREATE. PLACE. AUTO-RENDER.") -->
+  <section class="w-full hairline-b bg-[#f7f7f7] py-20 lg:py-24">
+    <div class="swiss-container space-y-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end" data-uxis-reveal>
+        <div class="lg:col-span-7 space-y-3">
+          <span class="eyebrow-label">THE NO-CODE HEADLESS WORKFLOW</span>
+          <h2 class="display-section text-[#222222]">Create. Place. Auto-Render.</h2>
+          <p class="text-base sm:text-lg text-[#4e4e4e] max-w-2xl leading-relaxed">
+            Traditional headless setups force developers to double-build every block in the CMS and again in Next.js. T3Headless collapses both worlds into one visual TYPO3 workflow.
+          </p>
+        </div>
+        <div class="lg:col-span-5 lg:text-right">
+          <a href={T3ELEMENT_LINKS.docsGuideUrl} target="_blank" rel="noopener noreferrer" class="uxis-cta-outline">
+            <span>View Full User Guide</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Animated Horizontal 3-Stage Pulse Rail -->
+      <div class="relative" data-uxis-reveal>
+        <div class="hidden lg:block absolute top-11 left-[12%] right-[12%] h-[2px] bg-[#222222]/12 overflow-hidden z-0">
+          <div class="h-full w-1/3 bg-gradient-to-r from-transparent via-[#f7931e] to-transparent v2-rail-pulse"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
+          <div class="group rounded-2xl p-8 bg-white text-[#222222] border border-[#222222]/12 hover:border-[#f7931e] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between gap-6 shadow-sm hover:shadow-md">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="w-10 h-10 rounded-full bg-[#f7f7f7] group-hover:bg-[#222222] group-hover:text-white border border-[#222222]/15 font-mono text-xs font-bold inline-flex items-center justify-center transition-colors">01</span>
+                <span class="font-mono text-[11px] uppercase tracking-widest text-[#8c8c8c] font-semibold">CREATE IN TYPO3</span>
+              </div>
+              <h3 class="text-2xl font-bold tracking-tight">No-Code Element Builder</h3>
+              <p class="text-sm text-[#4e4e4e] leading-relaxed">
+                Define Custom Elements or multi-column Container Elements visually in TYPO3 with drag-and-drop fields and click-to-copy markers.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-[#222222]/10 flex items-center justify-between font-mono text-xs">
+              <span class="text-[#8c8c8c]">CODING REQUIRED</span>
+              <span class="px-3 py-1 rounded-full bg-[#f7f7f7] border border-[#d9d9d9] font-semibold">0 Lines</span>
+            </div>
+          </div>
+
+          <div class="group rounded-2xl p-8 bg-[#222222] text-white border border-[#222222] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between gap-6 shadow-lg">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="w-10 h-10 rounded-full bg-[#f7931e] text-[#222222] font-mono text-xs font-bold inline-flex items-center justify-center">02</span>
+                <span class="font-mono text-[11px] uppercase tracking-widest text-[#f7931e] font-semibold">PLACE ON PAGE</span>
+              </div>
+              <h3 class="text-2xl font-bold tracking-tight">Native TYPO3 Page Tree</h3>
+              <p class="text-sm text-white/80 leading-relaxed">
+                Drop your newly created element onto any page via "+ Create new content", add slides or content, and hit Save.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-white/15 flex items-center justify-between font-mono text-xs">
+              <span class="text-white/60">EDITOR WORKFLOW</span>
+              <span class="px-3 py-1 rounded-full bg-white/12 text-[#f7931e] font-semibold">100% Native</span>
+            </div>
+          </div>
+
+          <div class="group rounded-2xl p-8 bg-white text-[#222222] border border-[#222222]/12 hover:border-[#f7931e] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between gap-6 shadow-sm hover:shadow-md">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="w-10 h-10 rounded-full bg-[#f7f7f7] group-hover:bg-[#222222] group-hover:text-white border border-[#222222]/15 font-mono text-xs font-bold inline-flex items-center justify-center transition-colors">03</span>
+                <span class="font-mono text-[11px] uppercase tracking-widest text-[#8c8c8c] font-semibold">AUTO-RENDER</span>
+              </div>
+              <h3 class="text-2xl font-bold tracking-tight">Auto-Generated Next.js</h3>
+              <p class="text-sm text-[#4e4e4e] leading-relaxed">
+                Your Next.js component is generated automatically with built-in Nimage, Link, and All.* helpers. No manual frontend coding needed.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-[#222222]/10 flex items-center justify-between font-mono text-xs">
+              <span class="text-[#8c8c8c]">NEXT.JS RENDER</span>
+              <span class="px-3 py-1 rounded-full bg-[#f7931e]/15 text-[#c86a00] font-semibold">Auto-Synced</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: INTERACTIVE 5-STEP WORKFLOW EXPLORER -->
+  <section class="w-full hairline-b bg-white py-20 lg:py-28">
+    <div class="swiss-container space-y-12">
+      <div class="max-w-3xl space-y-3" data-uxis-reveal>
+        <span class="eyebrow-label">INTERACTIVE PROCESS EXPLORER</span>
+        <h2 class="display-section text-[#222222]">
+          Click any step to see how TYPO3 powers Next.js automatically.
+        </h2>
+      </div>
+
+      <div
+        id="v2-workflow-explorer"
+        class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+        data-steps={JSON.stringify(workflowSteps)}
+      >
+        <!-- Left: 5 Clickable Interactive Steps -->
+        <div class="lg:col-span-5 space-y-2.5">
+          {
+            workflowSteps.map((step, idx) => (
+              <button
+                type="button"
+                data-wf-btn={String(idx)}
+                aria-selected={idx === 0 ? 'true' : 'false'}
+                class:list={[
+                  'w-full text-left p-5 rounded-2xl border transition-all duration-200 flex items-start gap-4 cursor-pointer',
+                  idx === 0
+                    ? 'bg-[#222222] text-white border-[#222222] shadow-md'
+                    : 'bg-white text-[#222222] border-[#222222]/12 hover:border-[#f7931e] hover:bg-[#f7f7f7]/60',
+                ]}
+              >
+                <span
+                  class:list={[
+                    'w-9 h-9 rounded-full font-mono text-xs font-bold inline-flex items-center justify-center shrink-0 border transition-colors',
+                    idx === 0
+                      ? 'bg-[#f7931e] text-[#222222] border-[#f7931e]'
+                      : 'bg-[#f7f7f7] text-[#222222] border-[#222222]/15',
+                  ]}
+                >
+                  {step.num}
+                </span>
+                <div class="space-y-1 min-w-0">
+                  <span class:list={['block font-mono text-[10px] uppercase tracking-wider', idx === 0 ? 'text-[#f7931e]' : 'text-[#8c8c8c]']}>
+                    {step.badge}
+                  </span>
+                  <span class="block text-base font-bold leading-snug">{step.title}</span>
+                </div>
+              </button>
+            ))
+          }
+        </div>
+
+        <!-- Right: Dynamic Morphing Stage Inspector -->
+        <div class="lg:col-span-7 lg:sticky lg:top-24">
+          <div id="v2-wf-card" class="rounded-2xl border border-[#222222]/14 bg-[#f7f7f7] p-7 sm:p-9 space-y-6 transition-all duration-300">
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#222222]/12">
+              <span id="v2-wf-badge" class="uxis-pill uxis-pill-orange font-mono text-xs font-bold">
+                {workflowSteps[0].badge}
+              </span>
+              <span id="v2-wf-path" class="font-mono text-xs text-[#4e4e4e]">
+                {workflowSteps[0].path}
+              </span>
+            </div>
+
+            <div class="space-y-3">
+              <h3 id="v2-wf-title" class="text-2xl sm:text-3xl font-bold text-[#222222] tracking-tight">
+                {workflowSteps[0].title}
+              </h3>
+              <p id="v2-wf-summary" class="text-base text-[#4e4e4e] leading-relaxed">
+                {workflowSteps[0].summary}
+              </p>
+            </div>
+
+            <ul id="v2-wf-highlights" class="space-y-2.5 bg-white rounded-xl p-5 border border-[#222222]/10">
+              {
+                workflowSteps[0].highlights.map((h) => (
+                  <li class="flex items-center gap-2.5 text-sm font-medium text-[#222222]">
+                    <span class="w-2 h-2 rounded-full bg-[#f7931e] shrink-0"></span>
+                    <span>{h}</span>
+                  </li>
+                ))
+              }
+            </ul>
+
+            <div class="rounded-xl bg-[#222222] text-white p-4 font-mono text-xs flex items-center justify-between gap-3 overflow-x-auto">
+              <code id="v2-wf-terminal" class="text-[#f7931e]">{workflowSteps[0].terminal}</code>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 shrink-0">LIVE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: INTERACTIVE THEME OPTIONS LIVE CUSTOMIZER -->
+  <section class="w-full hairline-b bg-[#f7f7f7] py-20 lg:py-28">
+    <div class="swiss-container space-y-10">
+      <div class="max-w-3xl space-y-3" data-uxis-reveal>
+        <span class="eyebrow-label">LIVE INTERACTIVE PLAYGROUND • THEME OPTIONS</span>
+        <h2 class="display-section text-[#222222]">
+          Control your Next.js header, logo, fonts &amp; styles from TYPO3.
+        </h2>
+        <p class="text-base text-[#4e4e4e]">
+          Try toggling TYPO3 <strong>Theme Options &gt; Header</strong> settings below and watch the Next.js frontend preview update in real time.
+        </p>
+      </div>
+
+      <div id="v2-theme-playground" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- Left: Interactive TYPO3 Theme Options Controls -->
+        <div class="lg:col-span-5 rounded-2xl bg-white border border-[#222222]/12 p-6 sm:p-7 space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-[#222222]/10">
+            <span class="font-mono text-xs font-bold uppercase text-[#222222]">TYPO3 Theme Options</span>
+            <span class="font-mono text-[10px] text-[#f7931e] font-semibold">INSTANT SYNC</span>
+          </div>
+
+          <!-- Accent Color -->
+          <div class="space-y-2">
+            <label class="block font-mono text-xs uppercase text-[#4e4e4e]">Brand Accent Color</label>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" data-theme-accent="#f7931e" class="px-3 py-1.5 rounded-full border border-[#222222] bg-[#222222] text-white font-mono text-xs cursor-pointer">T3 Orange</button>
+              <button type="button" data-theme-accent="#222222" class="px-3 py-1.5 rounded-full border border-[#d9d9d9] bg-white text-[#222222] font-mono text-xs cursor-pointer">Obsidian</button>
+              <button type="button" data-theme-accent="#059669" class="px-3 py-1.5 rounded-full border border-[#d9d9d9] bg-white text-[#222222] font-mono text-xs cursor-pointer">Emerald</button>
+            </div>
+          </div>
+
+          <!-- Logo Width -->
+          <div class="space-y-2">
+            <label class="block font-mono text-xs uppercase text-[#4e4e4e]">Custom Logo Size</label>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" data-theme-logo="sm" class="px-3 py-1.5 rounded-full border border-[#d9d9d9] bg-white text-[#222222] font-mono text-xs cursor-pointer">Compact</button>
+              <button type="button" data-theme-logo="md" class="px-3 py-1.5 rounded-full border border-[#222222] bg-[#222222] text-white font-mono text-xs cursor-pointer">Standard</button>
+              <button type="button" data-theme-logo="lg" class="px-3 py-1.5 rounded-full border border-[#d9d9d9] bg-white text-[#222222] font-mono text-xs cursor-pointer">Large</button>
+            </div>
+          </div>
+
+          <!-- Header Page Override -->
+          <div class="space-y-2">
+            <label class="flex items-center justify-between p-3.5 rounded-xl bg-[#f7f7f7] border border-[#222222]/10 cursor-pointer">
+              <div>
+                <span class="block text-sm font-bold text-[#222222]">Enable Global Header Page</span>
+                <span class="block font-mono text-[10px] text-[#4e4e4e]">Overrides default header with a TYPO3 page</span>
+              </div>
+              <input id="v2-header-page-toggle" type="checkbox" class="h-4 w-4 accent-[#f7931e] cursor-pointer" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Right: Live Next.js Preview Frame -->
+        <div class="lg:col-span-7 rounded-2xl bg-[#222222] p-5 sm:p-7 flex flex-col justify-between gap-4">
+          <div class="flex items-center justify-between font-mono text-[11px] text-white/60">
+            <span>NEXT.JS LIVE FRONTEND PREVIEW</span>
+            <span class="text-emerald-400">● Synchronized</span>
+          </div>
+
+          <div class="rounded-xl bg-white text-[#222222] overflow-hidden border border-white/15 flex-1 flex flex-col">
+            <!-- Optional Top Header Page Bar -->
+            <div id="v2-preview-topbar" class="hidden px-5 py-2 bg-[#f7931e] text-[#222222] font-mono text-[11px] font-bold text-center transition-all">
+              Global TYPO3 Header Page Active: Enterprise TYPO3 v13 / v14 Ready
+            </div>
+
+            <!-- Simulated Header -->
+            <div class="px-6 py-4 border-b border-[#222222]/10 flex items-center justify-between gap-4">
+              <div class="flex items-center gap-2.5">
+                <span id="v2-preview-logo" class="px-3 py-1 rounded-lg bg-[#222222] text-white font-display font-bold text-sm transition-all duration-300">
+                  YOUR BRAND
+                </span>
+              </div>
+              <div class="flex items-center gap-4 text-xs font-medium text-[#4e4e4e]">
+                <span>Products</span>
+                <span>Docs</span>
+                <span id="v2-preview-cta" class="px-3.5 py-1.5 rounded-full bg-[#f7931e] text-[#222222] font-bold transition-colors duration-300">
+                  Contact →
+                </span>
+              </div>
+            </div>
+
+            <!-- Simulated Body -->
+            <div class="p-6 space-y-3 my-auto">
+              <span class="font-mono text-[10px] uppercase tracking-wider text-[#8c8c8c]">Auto-Generated Next.js Page</span>
+              <h4 class="text-xl font-bold text-[#222222]">Managed 100% from TYPO3 Backend.</h4>
+              <p class="text-xs text-[#4e4e4e] leading-relaxed">
+                Logo dimensions, custom fonts, CSS/JS uploads, and global Header Pages update your Next.js storefront with zero manual frontend deployments.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: ECOSYSTEM & WORKLOADS -->
+  <section class="w-full hairline-b bg-[#f7f7f7] py-20 lg:py-28">
+    <div class="swiss-container space-y-14">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6" data-uxis-reveal>
+        <div class="space-y-3">
+          <span class="eyebrow-label">{content.showcase.eyebrow}</span>
+          <h2 class="display-section text-[#222222]">{content.showcase.heading}</h2>
+        </div>
+        <a href={routes.document} class="uxis-cta-outline shrink-0">
+          <span>{content.showcase.viewAllCta}</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {
+          content.showcase.cards.map((card, idx) => {
+            const isDark = card.theme === 'dark' || idx === 0;
+            const themeStyles = isDark
+              ? 'bg-[#222222] text-white border-[#222222]'
+              : 'bg-white text-[#222222] border-[#222222]/12';
+
+            const pillStyles = isDark
+              ? 'border-white/25 text-white'
+              : 'border-[#d9d9d9] text-[#222222]';
+
+            return (
+              <a
+                href={card.href}
+                class:list={[
+                  'group rounded-2xl p-8 sm:p-10 border flex flex-col justify-between min-h-[340px] transition-transform duration-300 hover:-translate-y-1',
+                  themeStyles,
+                ]}
+                data-uxis-reveal
+              >
+                <div class="space-y-5">
+                  <div class="flex items-center justify-between gap-3">
+                    <span class="font-mono text-xs uppercase tracking-widest opacity-75 inline-flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#f7931e]"></span>
+                      {card.badge}
+                    </span>
+                    <span class="w-9 h-9 rounded-full border border-current/25 inline-flex items-center justify-center group-hover:bg-[#f7931e] group-hover:border-[#f7931e] group-hover:text-white transition-colors">
+                      ↗
+                    </span>
+                  </div>
+
+                  <h3 class="text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
+                    {card.title}
+                  </h3>
+
+                  <p class="text-sm sm:text-base opacity-80 leading-relaxed max-w-xl">
+                    {card.description}
+                  </p>
+                </div>
+
+                <div class="pt-7 mt-7 border-t border-current/15 flex flex-wrap items-center justify-between gap-4">
+                  <div class="flex flex-wrap gap-2">
+                    {card.tags.map((t) => (
+                      <span class:list={['px-3 py-1 rounded-full border text-xs font-mono', pillStyles]}>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  <span class="font-mono text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-current/10">
+                    {card.metric}
+                  </span>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+
+      <!-- T3Headless × T3Element Unified Product Bridge -->
+      <div
+        class="rounded-2xl border border-[#222222]/14 bg-[#f7f7f7] p-7 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
+        data-uxis-reveal
+      >
+        <div class="lg:col-span-7 space-y-4">
+          <h3 class="text-2xl sm:text-3xl font-bold text-[#222222] tracking-tight">
+            {
+              locale === 'de'
+                ? 'Visuell in T3Element bauen. Als JSON über T3Headless ausliefern.'
+                : 'Build visually in T3Element. Deliver as JSON via T3Headless.'
+            }
+          </h3>
+          <p class="text-sm sm:text-base text-[#4e4e4e] leading-relaxed max-w-2xl">
+            {
+              locale === 'de'
+                ? 'T3Element ist unser offizieller Content-Block-Builder. Entwerfen Sie eigene TYPO3-Elemente per Drag-and-Drop und nutzen Sie sie sofort in Ihrer entkoppelten React- oder Next.js-App.'
+                : 'T3Element is our companion TYPO3 Content Block Builder. Design custom TYPO3 elements visually in minutes and consume them directly as structured JSON in T3Headless.'
+            }
+          </p>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end justify-center gap-3">
+          <div class="flex flex-wrap gap-3">
+            <a
+              href={T3ELEMENT_LINKS.appRegisterUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="uxis-cta-btn"
+            >
+              <span>{locale === 'de' ? 'T3Element Builder öffnen' : 'Launch T3Element Builder'}</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a href={routes.builtWith} class="uxis-cta-outline">
+              <span>{locale === 'de' ? 'Integration ansehen' : 'How they connect'}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <code class="px-3.5 py-2 rounded-xl bg-white border border-[#222222]/12 font-mono text-xs text-[#222222]">
+            {T3ELEMENT_LINKS.t3headlessComposerCmd}
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: INTERACTIVE TIME-SAVED CALCULATOR + COMPARISON MATRIX -->
+  <section class="w-full hairline-b bg-white py-20 lg:py-28">
+    <div class="swiss-container space-y-14">
+      <!-- Interactive Savings Calculator -->
+      <div class="rounded-2xl bg-[#222222] text-white p-8 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center" data-uxis-reveal>
+        <div class="lg:col-span-6 space-y-4">
+          <span class="font-mono text-xs uppercase tracking-widest text-[#f7931e] font-bold">
+            INTERACTIVE ROI CALCULATOR
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">
+            See how much Next.js coding T3Headless eliminates.
+          </h2>
+          <div class="pt-2 space-y-2">
+            <div class="flex items-center justify-between font-mono text-xs">
+              <span class="text-white/75">Custom Content Elements in your project:</span>
+              <span id="v2-calc-count" class="text-[#f7931e] font-bold text-base">15 Elements</span>
+            </div>
+            <input
+              id="v2-calc-slider"
+              type="range"
+              min="5"
+              max="50"
+              value="15"
+              class="w-full accent-[#f7931e] cursor-pointer"
+            />
+            <div class="flex justify-between font-mono text-[10px] text-white/45">
+              <span>5 blocks</span>
+              <span>25 blocks</span>
+              <span>50 blocks</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 grid grid-cols-3 gap-3 sm:gap-4">
+          <div class="p-4 sm:p-5 rounded-xl bg-white/8 border border-white/12 space-y-1 text-center">
+            <span id="v2-calc-files" class="block text-2xl sm:text-4xl font-bold text-[#f7931e]">15</span>
+            <span class="block font-mono text-[10px] uppercase text-white/70">Next.js Components Auto-Generated</span>
+          </div>
+          <div class="p-4 sm:p-5 rounded-xl bg-white/8 border border-white/12 space-y-1 text-center">
+            <span id="v2-calc-hours" class="block text-2xl sm:text-4xl font-bold text-white">68h</span>
+            <span class="block font-mono text-[10px] uppercase text-white/70">Frontend Dev Hours Saved</span>
+          </div>
+          <div class="p-4 sm:p-5 rounded-xl bg-white/8 border border-white/12 space-y-1 text-center">
+            <span class="block text-2xl sm:text-4xl font-bold text-emerald-400">0</span>
+            <span class="block font-mono text-[10px] uppercase text-white/70">Fluid Templates Needed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Architecture Comparison Matrix -->
+      <div class="rounded-2xl border border-[#222222]/12 overflow-hidden bg-white" data-uxis-reveal>
+        <div class="p-6 sm:p-8 border-b border-[#222222]/12">
+          <span class="eyebrow-label">ARCHITECTURE COMPARISON</span>
+          <h3 class="text-xl sm:text-2xl font-bold text-[#222222] mt-1">
+            Why T3Headless beats manual headless setups
+          </h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-[#222222]/12 bg-[#222222] text-white font-mono text-xs uppercase">
+                <th class="py-4 px-6">Capability</th>
+                <th class="py-4 px-6 opacity-75">Traditional Fluid TYPO3</th>
+                <th class="py-4 px-6 opacity-75">Manual Headless Setup</th>
+                <th class="py-4 px-6 text-[#f7931e] font-bold">T3Headless</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#222222]/12">
+              <tr class="bg-white">
+                <td class="py-4 px-6 font-semibold text-[#222222]">Next.js Component Coding</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">N/A (Monolithic Fluid)</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✕ Must hand-code every block</td>
+                <td class="py-4 px-6 font-bold text-[#f7931e]">✓ Auto-Generated (Zero Frontend Code)</td>
+              </tr>
+              <tr class="bg-[#f7f7f7]/60">
+                <td class="py-4 px-6 font-semibold text-[#222222]">Create Custom Elements</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">Manual TCA + TypoScript + Fluid</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">Manual API Schema + React UI</td>
+                <td class="py-4 px-6 font-bold text-[#222222]">✓ Visual 3-Tab Builder in TYPO3</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="py-4 px-6 font-semibold text-[#222222]">Native TYPO3 Page Tree</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✓ Included</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✕ Flat collections only</td>
+                <td class="py-4 px-6 font-bold text-[#222222]">✓ 100% Preserved &amp; Synced</td>
+              </tr>
+              <tr class="bg-[#f7f7f7]/60">
+                <td class="py-4 px-6 font-semibold text-[#222222]">TYPO3 Version Support</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">v12 / v13</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">Custom maintenance</td>
+                <td class="py-4 px-6 font-bold text-[#222222]">✓ TYPO3 v13 / v14 LTS Ready</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 8: COMPREHENSIVE TECHNICAL FAQ ACCORDION -->
+  <section class="w-full bg-[#f7f7f7] py-20 lg:py-28">
+    <div class="swiss-container">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-4 space-y-5">
+          <span class="eyebrow-label">{content.faqs.eyebrow}</span>
+          <h2 class="display-section text-[#222222]">{content.faqs.heading}</h2>
+          <p class="text-sm sm:text-base text-[#4e4e4e] leading-relaxed">
+            {
+              isDe
+                ? 'Alle Antworten zu No-Code-Elementen in TYPO3, der automatischen Next.js-Generierung, Architektur, Sicherheit und Migration.'
+                : 'Everything you need to know about creating no-code TYPO3 elements, Next.js auto-generation, enterprise architecture, security, and migration.'
+            }
+          </p>
+          <div class="pt-2">
+            <a href={routes.contact} class="uxis-cta-btn">
+              <span>{isDe ? 'Ingenieur fragen' : 'Ask an engineer'}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-8 bg-white rounded-2xl border border-[#222222]/12 shadow-sm overflow-hidden flex flex-col justify-between">
+          <div class="divide-y divide-[#222222]/12 px-6 sm:px-8">
+            {
+              displayedFaqs.map((item, idx) => (
+                <details class="group py-5" open={idx === 0}>
+                  <summary class="flex items-center justify-between gap-4 cursor-pointer list-none font-display text-lg font-semibold text-[#222222] group-hover:text-[#f7931e] transition-colors">
+                    <div class="flex items-center gap-4">
+                      <span class="font-mono text-xs text-[#f7931e] font-bold">{String(idx + 1).padStart(2, '0')}</span>
+                      <span>{item.q}</span>
+                    </div>
+                    <span class="w-8 h-8 rounded-full border border-[#d9d9d9] inline-flex items-center justify-center font-mono text-sm shrink-0 group-open:bg-[#222222] group-open:text-white group-open:border-[#222222] group-open:rotate-45 transition-all">
+                      +
+                    </span>
+                  </summary>
+                  <div class="pt-4 pl-8 pr-4 text-sm sm:text-base text-[#4e4e4e] leading-relaxed">
+                    {item.a}
+                  </div>
+                </details>
+              ))
+            }
+          </div>
+
+          <!-- Action Button after 5 FAQs routing to /faq -->
+          <div class="p-6 sm:p-7 border-t border-[#222222]/12 bg-[#f7f7f7] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <p class="font-display font-bold text-sm text-[#222222]">
+                {isDe ? 'Möchten Sie mehr über Architektur, APIs und Caching erfahren?' : 'Looking for more answers on architecture, APIs, and caching?'}
+              </p>
+              <p class="font-mono text-xs text-[#8c8c8c]">
+                {isDe ? '12 weitere technische Fragen auf der FAQ-Übersichtsseite verfügbar.' : '12 more technical questions available on the dedicated FAQ page.'}
+              </p>
+            </div>
+            <a
+              href={routes.faq}
+              class="px-5 py-2.5 rounded-full bg-[#222222] hover:bg-black text-white font-semibold text-xs font-mono transition-all inline-flex items-center gap-2 shrink-0 shadow-sm hover:shadow"
+            >
+              <span>{isDe ? 'Alle 17 FAQs anzeigen' : 'View All 17 FAQs'}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  @keyframes v2RailSweep {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(320%);
+    }
+  }
+  .v2-rail-pulse {
+    animation: v2RailSweep 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  /* Workflow Step Buttons Hover Safety */
+  [data-wf-btn][aria-selected="true"] {
+    background-color: #222222 !important;
+    color: #ffffff !important;
+    border-color: #222222 !important;
+  }
+  [data-wf-btn][aria-selected="true"]:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+  }
+
+  /* Theme Customizer Buttons Hover Safety */
+  [data-theme-accent],
+  [data-theme-logo] {
+    transition: all 0.2s ease;
+  }
+  [data-theme-accent]:hover,
+  [data-theme-logo]:hover {
+    border-color: #222222;
+  }
+</style>
+
+<script>
+  import { requestDemo } from '../../lib/crm';
+
+  function initHomeV2Interactions() {
+    // 1. Demo Form
+    const form = document.getElementById('hero-v2-demo-form') as HTMLFormElement | null;
+    if (form && form.dataset.bound !== 'true') {
+      form.dataset.bound = 'true';
+      const msgEl = document.getElementById('hero-v2-demo-msg');
+      const btn = document.getElementById('hero-v2-demo-btn') as HTMLButtonElement | null;
+      const labelEl = document.getElementById('hero-v2-demo-label');
+
+      const isDe = form.dataset.locale === 'de';
+      const defaultLabel = labelEl?.textContent || (isDe ? 'Demo anfordern' : 'Get a demo');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!msgEl) return;
+        msgEl.classList.add('hidden');
+        msgEl.classList.remove('text-red-600');
+        msgEl.classList.add('text-[#222222]');
+
+        const fd = new FormData(form);
+        const email = String(fd.get('email') || '');
+        if (btn) btn.disabled = true;
+        if (labelEl) labelEl.textContent = isDe ? 'Wird gesendet…' : 'Sending…';
+
+        const result = await requestDemo(email);
+        if (btn) btn.disabled = false;
+        if (labelEl) labelEl.textContent = defaultLabel;
+
+        if (result.ok) {
+          msgEl.textContent =
+            result.status === 'already_requested'
+              ? (isDe ? '✓ Demo für diese E-Mail bereits angefordert. Unser Team meldet sich in Kürze.' : '✓ Demo already requested for this email. Our team will follow up shortly.')
+              : (isDe ? '✓ Demo-Anfrage erhalten. Unser Engineering-Team meldet sich in Kürze.' : '✓ Demo request received. Our team will reply shortly.');
+          if (result.status !== 'already_requested') form.reset();
+          msgEl.classList.remove('hidden');
+        } else {
+          msgEl.textContent = `✕ ${result.error || (isDe ? 'Anfrage fehlgeschlagen. Bitte versuchen Sie es erneut.' : 'Request failed. Please try again.')}`;
+          msgEl.classList.remove('text-[#222222]', 'hidden');
+          msgEl.classList.add('text-red-600');
+        }
+      });
+    }
+
+    // 2. Copy Composer Command Button
+    const copyBtn = document.getElementById('v2-copy-composer');
+    const copyText = document.getElementById('v2-composer-text');
+    if (copyBtn && copyBtn.dataset.bound !== 'true') {
+      copyBtn.dataset.bound = 'true';
+      copyBtn.addEventListener('click', () => {
+        const cmd = copyBtn.dataset.cmd || 'composer require t3element/t3headless';
+        navigator.clipboard?.writeText(cmd).catch(() => {});
+        if (copyText) {
+          copyText.textContent = '✓ Copied: ' + cmd;
+          setTimeout(() => {
+            copyText.textContent = cmd;
+          }, 1800);
+        }
+      });
+    }
+
+    // 3. Interactive 5-Step Workflow Explorer
+    const explorer = document.getElementById('v2-workflow-explorer');
+    if (explorer && explorer.dataset.bound !== 'true') {
+      explorer.dataset.bound = 'true';
+      const steps = JSON.parse(explorer.dataset.steps || '[]');
+      const btns = Array.from(explorer.querySelectorAll<HTMLButtonElement>('[data-wf-btn]'));
+      const badgeEl = document.getElementById('v2-wf-badge');
+      const pathEl = document.getElementById('v2-wf-path');
+      const titleEl = document.getElementById('v2-wf-title');
+      const summaryEl = document.getElementById('v2-wf-summary');
+      const highlightsEl = document.getElementById('v2-wf-highlights');
+      const termEl = document.getElementById('v2-wf-terminal');
+
+      btns.forEach((b, idx) => {
+        b.addEventListener('click', () => {
+          const step = steps[idx];
+          if (!step) return;
+          btns.forEach((btn, i) => {
+            const active = i === idx;
+            btn.setAttribute('aria-selected', String(active));
+            btn.classList.toggle('bg-[#222222]', active);
+            btn.classList.toggle('text-white', active);
+            btn.classList.toggle('border-[#222222]', active);
+            btn.classList.toggle('shadow-md', active);
+            btn.classList.toggle('bg-white', !active);
+            btn.classList.toggle('text-[#222222]', !active);
+            btn.classList.toggle('border-[#222222]/12', !active);
+            const numBadge = btn.querySelector('span');
+            if (numBadge) {
+              numBadge.classList.toggle('bg-[#f7931e]', active);
+              numBadge.classList.toggle('text-[#222222]', active);
+              numBadge.classList.toggle('border-[#f7931e]', active);
+              numBadge.classList.toggle('bg-[#f7f7f7]', !active);
+            }
+          });
+          if (badgeEl) badgeEl.textContent = step.badge;
+          if (pathEl) pathEl.textContent = step.path;
+          if (titleEl) titleEl.textContent = step.title;
+          if (summaryEl) summaryEl.textContent = step.summary;
+          if (termEl) termEl.textContent = step.terminal;
+          if (highlightsEl) {
+            highlightsEl.innerHTML = step.highlights
+              .map(
+                (h: string) =>
+                  `<li class="flex items-center gap-2.5 text-sm font-medium text-[#222222]"><span class="w-2 h-2 rounded-full bg-[#f7931e] shrink-0"></span><span>${h}</span></li>`
+              )
+              .join('');
+          }
+        });
+      });
+    }
+
+    // 4. Theme Options Live Customizer
+    const playground = document.getElementById('v2-theme-playground');
+    if (playground && playground.dataset.bound !== 'true') {
+      playground.dataset.bound = 'true';
+      const accentBtns = Array.from(playground.querySelectorAll<HTMLButtonElement>('[data-theme-accent]'));
+      const logoBtns = Array.from(playground.querySelectorAll<HTMLButtonElement>('[data-theme-logo]'));
+      const headerToggle = document.getElementById('v2-header-page-toggle') as HTMLInputElement | null;
+      const previewCta = document.getElementById('v2-preview-cta');
+      const previewLogo = document.getElementById('v2-preview-logo');
+      const previewTopbar = document.getElementById('v2-preview-topbar');
+
+      accentBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const color = btn.dataset.themeAccent || '#f7931e';
+          accentBtns.forEach((b) => {
+            const active = b === btn;
+            b.classList.toggle('bg-[#222222]', active);
+            b.classList.toggle('text-white', active);
+            b.classList.toggle('border-[#222222]', active);
+            b.classList.toggle('bg-white', !active);
+            b.classList.toggle('text-[#222222]', !active);
+          });
+          if (previewCta) {
+            previewCta.style.backgroundColor = color;
+            previewCta.style.color = color === '#f7931e' ? '#222222' : '#ffffff';
+          }
+          if (previewTopbar) {
+            previewTopbar.style.backgroundColor = color;
+            previewTopbar.style.color = color === '#f7931e' ? '#222222' : '#ffffff';
+          }
+        });
+      });
+
+      logoBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const sz = btn.dataset.themeLogo || 'md';
+          logoBtns.forEach((b) => {
+            const active = b === btn;
+            b.classList.toggle('bg-[#222222]', active);
+            b.classList.toggle('text-white', active);
+            b.classList.toggle('border-[#222222]', active);
+            b.classList.toggle('bg-white', !active);
+            b.classList.toggle('text-[#222222]', !active);
+          });
+          if (previewLogo) {
+            previewLogo.classList.remove('text-xs', 'text-sm', 'text-lg', 'px-2.5', 'px-3', 'px-5');
+            if (sz === 'sm') previewLogo.classList.add('text-xs', 'px-2.5');
+            else if (sz === 'lg') previewLogo.classList.add('text-lg', 'px-5');
+            else previewLogo.classList.add('text-sm', 'px-3');
+          }
+        });
+      });
+
+      headerToggle?.addEventListener('change', () => {
+        previewTopbar?.classList.toggle('hidden', !headerToggle.checked);
+      });
+    }
+
+    // 5. Interactive ROI Savings Calculator
+    const slider = document.getElementById('v2-calc-slider') as HTMLInputElement | null;
+    const countEl = document.getElementById('v2-calc-count');
+    const filesEl = document.getElementById('v2-calc-files');
+    const hoursEl = document.getElementById('v2-calc-hours');
+    if (slider && slider.dataset.bound !== 'true') {
+      slider.dataset.bound = 'true';
+      slider.addEventListener('input', () => {
+        const n = Number(slider.value || 15);
+        if (countEl) countEl.textContent = `${n} Elements`;
+        if (filesEl) filesEl.textContent = String(n);
+        if (hoursEl) hoursEl.textContent = `${Math.round(n * 4.5)}h`;
+      });
+    }
+  }
+
+  initHomeV2Interactions();
+  document.addEventListener('astro:page-load', initHomeV2Interactions);
+</script>

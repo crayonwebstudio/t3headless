@@ -1,0 +1,393 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LiveJsonPreview from '../widgets/LiveJsonPreview.astro';
+import { ROUTES, T3ELEMENT_LINKS, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const routes = ROUTES[locale];
+const isDe = locale === 'de';
+
+const chapters = [
+  {
+    id: 'typo3-installation',
+    code: '01 / TYPO3 INSTALLATION',
+    title: isDe ? 'Extension-Installation & Basiskonfiguration' : 'Extension Install & Base Configuration',
+    summary: isDe
+      ? 'Installieren Sie EXT:t3headless über Composer (zwingend ab TYPO3 v14; TER-Installation wird bis TYPO3 v13 unterstützt) und richten Sie die grundlegenden TYPO3-Optionen und TypoScript-Reihenfolge ein.'
+      : 'Install EXT:t3headless via Composer (mandatory for TYPO3 v14+; TER installation is supported up to TYPO3 v13), disable cHash 404 errors, and include the TypoScript templates in the required sequence.',
+    highlights: isDe
+      ? [
+          'Admin Tools > Settings > Configure Installation-Wide Options: [FE][pageNotFoundOnCHashError] auf false setzen.',
+          'Composer installiert die benötigte Abhängigkeit Container Content Elements automatisch.',
+          'TypoScript unter Site Management > TypoScript (Advanced Options) in dieser Reihenfolge einbinden: fluid_styled_content, form, seo, news, t3headless.',
+        ]
+      : [
+          'Admin Tools > Settings > Configure Installation-Wide Options: set [FE][pageNotFoundOnCHashError] to false.',
+          'Composer automatically installs the required Container Content Elements dependency.',
+          'In Site Management > TypoScript (Advanced Options), remove default Setup TypoScript and include in order: fluid_styled_content, form, seo, news, t3headless.',
+        ],
+    snippet: `# 1. Install EXT:t3headless via Composer (mandatory for TYPO3 v14+, recommended for v13)
+composer require t3element/t3headless
+
+# 2. Setup extensions & flush caches
+vendor/bin/typo3 extension:setup
+vendor/bin/typo3 cache:flush
+
+# Note: TER download (Admin Tools > Extensions > Get Extension -> "t3headless")
+# is supported up to TYPO3 v13 only.`,
+  },
+  {
+    id: 'api-activation',
+    code: '02 / API & ACTIVATION',
+    title: isDe ? 'YAML API-Import & Lizenzaktivierung' : 'YAML API Configuration & License Activation',
+    summary: isDe
+      ? 'Importieren Sie die Headless-API-Definition in die Site-Konfiguration (config.yaml) Ihrer TYPO3-Website und aktivieren Sie EXT:t3headless direkt im Backend unter Web > t3headless.'
+      : 'Import the T3Headless API routes into your site config.yaml and activate the extension inside TYPO3 via Web > t3headless using either a store license key or instant free registration.',
+    highlights: isDe
+      ? [
+          'Fügen Sie den YAML-Import in config/sites/<site>/config.yaml hinzu.',
+          'Gehen Sie im Backend auf Web > t3headless > Get Started.',
+          'Wählen Sie "Activate License" (gekaufter Schlüssel) oder registrieren Sie sich direkt für einen kostenlosen Lizenzschlüssel per E-Mail.',
+        ]
+      : [
+          'Add the API resource import to your site config/sites/<site>/config.yaml file.',
+          'Navigate to Web > t3headless > Get Started in the TYPO3 backend.',
+          'Choose "Activate License" with your T3Element store key, or register directly after installation to receive a free license key by email.',
+        ],
+    snippet: `# config/sites/<your-site>/config.yaml
+imports:
+  - resource: 'EXT:t3headless/Configuration/Yaml/default.yaml'
+
+# Verify JSON API endpoint once configured:
+# curl -i https://api.example.com/?type=834`,
+  },
+  {
+    id: 'nextjs-frontend',
+    code: '03 / NEXT.JS FRONTEND',
+    title: isDe ? 'Next.js Frontend-Paket (t3headless-frontend)' : 'Next.js Frontend Package (t3headless-frontend)',
+    summary: isDe
+      ? 'Richten Sie das produktionsreife Next.js-Frontend ein, verbinden Sie es über API_KEY und API_LICENSE_KEY in config.js und verwalten Sie Logo, Favicon, CSS/JS und Header-Seiten zentral unter Theme Options > Header.'
+      : 'Set up the production-ready Next.js frontend package, connect it to TYPO3 via config.js, and manage global Header/Footer pages, Logo, Favicon, Fonts, and CSS/JS directly from Theme Options > Header.',
+    highlights: isDe
+      ? [
+          'Voraussetzungen: Next.js-fähiger Server mit Node.js 18.17+ (empfohlen v20.11.0) sowie npm oder yarn.',
+          'API_LICENSE_KEY und API_KEY aus der Aktivierungs-E-Mail in config.js eintragen.',
+          'Einmaliges Setup (yarn setup) ausführen, danach Theme/Elemente mit yarn themebuild generieren.',
+        ]
+      : [
+          'Prerequisites: Next.js supported server with Node.js 18.17+ (recommended v20.11.0), plus npm or yarn.',
+          'Configure API_LICENSE_KEY and API_KEY from your activation email inside config.js.',
+          'Run initial setup once (yarn setup), rebuild theme & UI elements anytime with yarn themebuild, then build and start.',
+        ],
+    snippet: `# 1. Clone the Next.js frontend package
+git clone https://github.com/milancrayon/t3headless-frontend
+cd t3headless-frontend
+
+# 2. Add API_LICENSE_KEY and API_KEY in config.js
+
+# 3. Run initial setup (required once)
+yarn setup          # or: npm run setup
+
+# 4. Build theme configuration & generated UI elements
+yarn themebuild     # or: npm run themebuild
+
+# 5. Build and launch production server (default port 3000)
+yarn build && yarn start`,
+  },
+  {
+    id: 'visual-elements',
+    code: '04 / VISUAL ELEMENTS',
+    title: isDe ? 'Container- & Custom-Elemente visuell erstellen' : 'Building Container & Custom Elements',
+    summary: isDe
+      ? 'Erstellen Sie mehrspaltige Container-Elemente sowie eigene Content-Blöcke (z.B. Slider, Teaser, CTA) über den geführten 3-Schritte-Workflow (Info, Fields, Template) direkt im TYPO3-Backend.'
+      : 'Create multi-column Container Elements and custom content blocks (such as Sliders, Teaser Boxes, and CTAs) using the guided 3-tab workflow (Info, Fields, Template) directly inside TYPO3.',
+    highlights: isDe
+      ? [
+          'Container Elements (t3headless > Elements > Container Elements): Über "+ Add Column" beliebig viele Spalten anlegen und Vorlage direkt anpassen.',
+          'Custom Elements (t3headless > Elements > Custom Elements): Felder per Drag-and-Drop hinzufügen, inklusive "Repeating"-Element für Slider und Akkordeons.',
+          'Theme Options > Header: Logo (inkl. eigener Breite/Höhe), Favicon, Fonts, CSS/JS und globale Header-Seiten ohne Code-Deployment pflegen.',
+        ]
+      : [
+          'Container Elements (t3headless > Elements > Container Elements): click "New Container Element", add columns via "+ Add Column", and customize the generated template.',
+          'Custom Elements (t3headless > Elements > Custom Elements): click "+ Create New Element", drag and drop fields, and use the "Repeating" field for sliders or FAQs.',
+          'Theme Options > Header: upload Logo (with optional custom width/height), Favicon, Fonts, CSS/JS, and assign global Header pages.',
+        ],
+    snippet: `# Guided 3-Tab Builder Workflow in TYPO3 Backend:
+#
+# Container Elements: t3headless > Elements > Container Elements > New Container Element
+# Custom Elements:    t3headless > Elements > Custom Elements    > + Create New Element
+#
+#   Tab 1: Info      -> Title, Short Title, Description
+#   Tab 2: Fields    -> Add Columns / Drag-and-Drop Fields / Repeating Items
+#   Tab 3: Template  -> Edit React/Next.js JSX template directly`,
+  },
+  {
+    id: 'react-next-notes',
+    code: '05 / REACT & NEXT.JS NOTES',
+    title: isDe ? 'Wichtige Hinweise für React / Next.js Templates' : 'React / Next.js Template Guidelines',
+    summary: isDe
+      ? 'Beachten Sie beim Bearbeiten von T3Headless-Templates die speziellen JSX-Regeln sowie die automatisch bereitgestellten Komponenten (Link, Nimage und All.*).'
+      : 'Follow these essential conventions when editing T3Headless React/Next.js component templates, including built-in components that require no manual imports.',
+    highlights: isDe
+      ? [
+          'className statt HTML-class Attribut verwenden.',
+          'Next.js <Link> statt <a> verwenden (im T3Headless-Template automatisch verfügbar, kein Import nötig).',
+          '<Nimage> statt <img> verwenden (überschreibt Next.js Image; Pflicht-Props: key, immg, data; kein Import nötig).',
+          'React-Bootstrap & Swiper-Komponenten über das Präfix "All." nutzen: <All.Accordion>, <All.Slider> und <All.SliderItem>.',
+        ]
+      : [
+          'Use className instead of the standard HTML class attribute.',
+          'Use Next.js <Link> instead of <a> (auto-available in T3Headless templates; no import needed).',
+          'Use <Nimage> instead of <img> (custom wrapper over Next.js Image; mandatory props: key, immg, data; no import needed).',
+          'Access React-Bootstrap and Swiper components via the "All." prefix: <All.Accordion>, <All.Slider>, and <All.SliderItem>.',
+        ],
+    snippet: `{/* 1. Next.js Link & className (no import needed) */}
+<Link href="/contact" className="btn-primary">Get Started</Link>
+
+{/* 2. T3Headless Nimage component (no import needed) */}
+{_data?.images?.map((immg: any, index: number) => (
+  <Nimage
+    key={_data?.uid + immg?.url + index}
+    immg={immg}
+    data={data}
+    width={500}
+    height={500}
+    className="w-100 h-auto"
+    alt="Preview"
+  />
+))}
+
+{/* 3. React-Bootstrap & Swiper via All.* prefix */}
+<All.Accordion defaultActiveKey="0">...</All.Accordion>
+<All.Slider slidesPerView={1} navigation={true}>
+  <All.SliderItem>...</All.SliderItem>
+</All.Slider>`,
+  },
+];
+
+const techArticleSchema = {
+  '@type': 'TechArticle',
+  headline: isDe
+    ? 'T3Headless & T3Element Entwickler-Dokumentation (TYPO3 v13/v14 LTS)'
+    : 'T3Headless & T3Element Developer Documentation (TYPO3 v13/v14 LTS)',
+  datePublished: '2026-01-15',
+  dateModified: '2026-11-20',
+  author: {
+    '@type': 'Organization',
+    name: 'T3Headless Engineering Team',
+  },
+  proficiencyLevel: 'Expert',
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title={isDe ? 'Dokumentation & Benutzerhandbuch | T3Headless' : 'Documentation & User Guide | T3Headless'}
+  description={
+    isDe
+      ? 'Kompakte Übersicht zur T3Headless Dokumentation: Composer-Installation (t3element/t3headless), YAML API-Konfiguration, Next.js Frontend-Setup, Container-/Custom-Elemente und React-Template-Hinweise.'
+      : 'Highlighted T3Headless documentation and user guide: Composer installation (t3element/t3headless), YAML API setup, Next.js frontend package, visual elements, and React template notes.'
+  }
+  breadcrumbLabel={isDe ? 'Dokumentation' : 'Documentation'}
+  schema={techArticleSchema}
+>
+  <!-- Hero Header -->
+  <section class="w-full hairline-b bg-[#ffffff] py-16 sm:py-24">
+    <div class="swiss-container">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
+        <div class="lg:col-span-8 space-y-5">
+          <div class="flex items-center gap-3">
+            <span class="eyebrow-label">DEVELOPER DOCUMENTATION HUB</span>
+            <span class="px-3 py-0.5 rounded-full bg-white border border-[#222222]/15 font-mono text-xs font-semibold">
+              TYPO3 v13 / v14
+            </span>
+          </div>
+          <h1 class="display-hero text-[#222222]">
+            {
+              isDe
+                ? 'T3Headless Dokumentation & Kurzanleitung.'
+                : 'T3Headless Documentation & Quickstart Guide.'
+            }
+          </h1>
+          <p class="text-lg sm:text-xl text-[#4e4e4e] max-w-3xl leading-relaxed">
+            {
+              isDe
+                ? 'Die wichtigsten Schritte aus unserem offiziellen Benutzerhandbuch: TYPO3-Installation per Composer, YAML API-Konfiguration, Next.js Frontend-Setup und React-Template-Konventionen.'
+                : 'Highlighted essentials from our official user guide: TYPO3 Composer installation, YAML API setup, Next.js frontend configuration, visual elements, and React template conventions.'
+            }
+          </p>
+        </div>
+        <div class="lg:col-span-4 flex flex-wrap lg:justify-end gap-3">
+          <a
+            href={T3ELEMENT_LINKS.docsGuideUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="uxis-cta-outline"
+          >
+            <span>{isDe ? 'Vollständige Doku' : 'Full User Guide'}</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href={routes.contact} class="uxis-cta-btn">
+            <span>{isDe ? 'Architektur-Review' : 'Book Architecture Review'}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2-Column Swiss Documentation Layout (Sticky Left Rail + Right Technical Chapters) -->
+  <section class="w-full hairline-b bg-white">
+    <div class="swiss-container">
+      <div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#222222]/14">
+        <!-- Sticky Chapter Navigation -->
+        <aside class="lg:col-span-4 py-12 lg:pr-10">
+          <div class="sticky top-24 space-y-6">
+            <p class="font-mono text-xs uppercase tracking-widest text-[#f7931e] font-bold">
+              {isDe ? 'KAPITELÜBERSICHT' : 'DOCUMENTATION CHAPTERS'}
+            </p>
+            <nav class="space-y-2">
+              {
+                chapters.map((ch) => (
+                  <a
+                    href={`#${ch.id}`}
+                    class="block p-3.5 rounded-2xl border border-[#222222]/12 bg-[#ffffff]/60 hover:bg-[#ffffff] hover:border-[#f7931e] transition-colors"
+                  >
+                    <span class="block font-mono text-[11px] text-[#f7931e] font-semibold">
+                      {ch.code}
+                    </span>
+                    <span class="block font-semibold text-sm text-[#222222] mt-0.5">
+                      {ch.title}
+                    </span>
+                  </a>
+                ))
+              }
+            </nav>
+
+            <div class="p-5 rounded-2xl bg-[#222222] text-[#ffffff] space-y-3">
+              <p class="font-mono text-xs text-[#f7931e] uppercase">Composer Quick Install</p>
+              <code class="block font-mono text-xs text-[#ffffff]/90 break-all">
+                {T3ELEMENT_LINKS.t3headlessComposerCmd}
+              </code>
+              <p class="text-xs text-[#ffffff]/70">
+                {
+                  isDe
+                    ? 'Unterstützt TYPO3 v13 und v14 LTS. Ab v14 ist die Composer-Installation erforderlich.'
+                    : 'Supports TYPO3 v13 and v14 LTS. Composer installation is mandatory for TYPO3 v14+.'
+                }
+              </p>
+              <div class="pt-2 flex flex-col gap-1.5 border-t border-white/12">
+                <a
+                  href={T3ELEMENT_LINKS.t3headlessTerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 font-mono text-xs text-[#f7931e] hover:underline"
+                >
+                  <span>{isDe ? 'TYPO3 Extension Repository' : 'TYPO3 Extension Repository'}</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <a
+                  href={T3ELEMENT_LINKS.docsGuideUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 font-mono text-xs text-white/85 hover:text-[#f7931e] transition-colors"
+                >
+                  <span>{isDe ? 'Offizielles Benutzerhandbuch' : 'Official User Guide'}</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Chapters -->
+        <div class="lg:col-span-8 py-12 lg:pl-12 divide-y divide-[#222222]/14">
+          {
+            chapters.map((ch) => (
+              <article id={ch.id} class="py-10 first:pt-0 last:pb-0 space-y-5 scroll-mt-24">
+                <span class="font-mono text-xs font-bold text-[#f7931e]">{ch.code}</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-[#222222]">{ch.title}</h2>
+                <p class="text-base text-[#4e4e4e] leading-relaxed">{ch.summary}</p>
+                <ul class="space-y-2 text-sm text-[#222222] bg-[#f7f7f7] rounded-2xl p-5 border border-[#222222]/10">
+                  {ch.highlights.map((point) => (
+                    <li class="flex items-start gap-2.5 leading-relaxed">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#f7931e] mt-2 shrink-0" aria-hidden="true"></span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div class="rounded-2xl bg-[#222222] text-[#ffffff] p-6 border border-[#222222] overflow-x-auto">
+                  <pre class="font-mono text-xs sm:text-sm leading-relaxed"><code>{ch.snippet}</code></pre>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Schema Sandbox -->
+  <section class="w-full hairline-b bg-[#ffffff] py-20">
+    <div class="swiss-container space-y-8">
+      <div class="space-y-2">
+        <span class="eyebrow-label">INTERACTIVE JSON SCHEMA SANDBOX</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#222222]">
+          {isDe ? 'JSON-Antworten testen' : 'Inspect JSON Responses'}
+        </h2>
+      </div>
+      <LiveJsonPreview />
+    </div>
+  </section>
+
+  <!-- Official Documentation Portal Reference Banner -->
+  <section class="w-full bg-[#f7f7f7] py-16">
+    <div class="swiss-container">
+      <div class="rounded-2xl bg-[#222222] text-white p-8 sm:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="space-y-3 max-w-2xl">
+          <span class="font-mono text-xs uppercase tracking-widest text-[#f7931e] font-bold">
+            {isDe ? 'OFFIZIELLE DOKUMENTATION & BENUTZERHANDBUCH' : 'OFFICIAL DOCUMENTATION & USER GUIDE'}
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">
+            {
+              isDe
+                ? 'Vollständige Schritt-für-Schritt-Anleitungen mit Screenshots ansehen.'
+                : 'Explore the complete step-by-step T3Headless user guide.'
+            }
+          </h2>
+          <p class="text-sm sm:text-base text-white/75 leading-relaxed">
+            {
+              isDe
+                ? 'Alle Detailartikel zu TYPO3-Installation, Abhängigkeiten, Theme-Optionen, Container-/Custom-Elementen und React-Template-Beispielen finden Sie in unserem Dokumentationsportal.'
+                : 'Read every walkthrough with backend screenshots, theme options, container and custom element tutorials, and React/Next.js template references on our official documentation portal.'
+            }
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end gap-3 shrink-0">
+          <a
+            href={T3ELEMENT_LINKS.docsGuideUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-6 py-3.5 rounded-full bg-[#f7931e] hover:bg-white text-[#222222] font-display font-bold text-sm inline-flex items-center justify-center gap-2 transition-colors"
+          >
+            <span>{isDe ? 'Vollständige Dokumentation lesen' : 'Read the Full Documentation'}</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a
+            href={T3ELEMENT_LINKS.t3headlessTerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono text-xs text-white/75 hover:text-[#f7931e] transition-colors"
+          >
+            {isDe ? 'Im TYPO3 Extension Repository ansehen ↗' : 'View on TYPO3 Extension Repository ↗'}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

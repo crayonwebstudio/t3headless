@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_CONTENT, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const content = SITE_CONTENT[locale];
+const isDe = locale === 'de';
+
+const clauses = [
+  {
+    num: '01',
+    title: isDe ? 'Datenerhebung & Verantwortliche Stelle' : 'Information We Collect & Controller',
+    body: isDe
+      ? 'T3Headless (Thurgauerstrasse 117, 8152 Opfikon, Schweiz) erhebt personenbezogene Daten (Name, geschäftliche E-Mail-Adresse, Projektdaten), wenn Sie unser Kontaktformular, das Support-Ticket-System oder den Newsletter nutzen.'
+      : 'T3Headless (Thurgauerstrasse 117, 8152 Opfikon, Switzerland) collects personal information (name, work email, technical project details) when you submit our inquiry forms, support tickets, or subscribe to release updates.',
+  },
+  {
+    num: '02',
+    title: isDe ? 'Verwendungszweck der Daten' : 'How We Use Your Information',
+    body: isDe
+      ? 'Wir verwenden Ihre Angaben ausschliesslich zur Bereitstellung unserer Headless-TYPO3-Lösungen, zur Bearbeitung von 360-Care-Support-Tickets sowie zur Übermittlung angeforderter Architektur-Blueprints.'
+      : 'We process your data strictly to deliver our Headless TYPO3 solutions, resolve 360 Care support tickets, schedule consultations, and provide requested technical documentation.',
+  },
+  {
+    num: '03',
+    title: isDe ? 'Schweizer DSG & EU-DSGVO Konformität' : 'Swiss FADP & EU GDPR Compliance',
+    body: isDe
+      ? 'Alle Datenverarbeitungen erfolgen in Übereinstimmung mit dem Schweizer Bundesgesetz über den Datenschutz (DSG) sowie der Europäischen Datenschutz-Grundverordnung (DSGVO).'
+      : 'All data processing activities comply strictly with the Swiss Federal Act on Data Protection (FADP) and the European Union General Data Protection Regulation (GDPR).',
+  },
+  {
+    num: '04',
+    title: isDe ? 'Cookies & Analyse' : 'Cookies & Telemetry',
+    body: isDe
+      ? 'Unsere Plattform setzt auf datenschutzfreundliche Architektur mit minimalen technischen Sitzungs-Cookies für Sprachpräferenzen (EN/DE) und Formularschutz.'
+      : 'Our platform uses a privacy-first architecture relying only on essential technical session tokens for locale preferences (EN/DE) and spam protection.',
+  },
+  {
+    num: '05',
+    title: isDe ? 'Datensicherheit & Infrastruktur' : 'Data Security & Infrastructure',
+    body: isDe
+      ? 'Sämtliche Übertragungen sind TLS 1.3-verschlüsselt. Kundensysteme im 360-Care-Programm werden in ISO-27001-zertifizierten Rechenzentren betrieben.'
+      : 'All transmissions are encrypted via TLS 1.3. Client installations under the 360 Care Program operate inside ISO-27001 certified European and Swiss data centers.',
+  },
+  {
+    num: '06',
+    title: isDe ? 'Weitergabe an Dritte' : 'Third-Party Processors',
+    body: isDe
+      ? 'Wir verkaufen niemals personenbezogene Daten. Eine Weitergabe erfolgt nur an vertraglich gebundene Auftragsverarbeiter (z. B. Terminbuchung via Cal.com), sofern Sie diese aktiv nutzen.'
+      : 'We never sell personal data. Information is shared only with vetted sub-processors (such as Cal.com when you explicitly book a consultation) bound by strict DPAs.',
+  },
+  {
+    num: '07',
+    title: isDe ? 'Aufbewahrungsdauer' : 'Data Retention',
+    body: isDe
+      ? 'Support-Tickets und Projektdokumentationen werden für die Dauer des Vertragsverhältnisses sowie gemäss den gesetzlichen Schweizer Aufbewahrungspflichten gespeichert.'
+      : 'Support tickets and project records are retained for the duration of our active service agreement and in accordance with statutory Swiss commercial retention periods.',
+  },
+  {
+    num: '08',
+    title: isDe ? 'Ihre Rechte & Kontakt' : 'Your Rights & Data Protection Officer',
+    body: isDe
+      ? `Sie haben jederzeit das Recht auf Auskunft, Berichtigung oder Löschung Ihrer Daten. Kontaktieren Sie uns unter ${content.meta.email}.`
+      : `You have the right to request access, rectification, portability, or erasure of your personal data at any time by contacting ${content.meta.email}.`,
+  },
+];
+---
+
+<BaseLayout
+  locale={locale}
+  title={isDe ? 'Datenschutzerklärung | T3Headless Schweiz' : 'Privacy Policy | T3Headless Switzerland'}
+  description={
+    isDe
+      ? 'Datenschutzerklärung von T3Headless (Opfikon, Schweiz) gemäss Schweizer Datenschutzgesetz (DSG) und Europäischer Datenschutz-Grundverordnung (DSGVO).'
+      : 'Privacy and data protection policy of T3Headless (Opfikon, Switzerland) in compliance with Swiss FADP and European Union GDPR.'
+  }
+  breadcrumbLabel={isDe ? 'Datenschutz' : 'Privacy Policy'}
+>
+  <section class="w-full hairline-b bg-[#ffffff] py-16 sm:py-24">
+    <div class="swiss-container space-y-5">
+      <span class="eyebrow-label">SWISS FADP & EU GDPR COMPLIANCE</span>
+      <h1 class="display-hero text-[#222222]">
+        {isDe ? 'Datenschutzerklärung.' : 'Privacy & Data Protection Policy.'}
+      </h1>
+      <p class="text-base sm:text-lg text-[#4e4e4e] max-w-2xl">
+        {content.meta.address} • {content.meta.email}
+      </p>
+    </div>
+  </section>
+
+  <section class="w-full bg-white py-20">
+    <div class="swiss-container">
+      <div class="border-t border-[#222222]/14 divide-y divide-[#222222]/14">
+        {
+          clauses.map((c) => (
+            <div class="py-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <div class="lg:col-span-1 font-mono text-xs font-bold text-[#f7931e]">
+                {c.num}
+              </div>
+              <div class="lg:col-span-4">
+                <h2 class="text-xl font-bold text-[#222222]">{c.title}</h2>
+              </div>
+              <div class="lg:col-span-7 text-sm sm:text-base text-[#4e4e4e] leading-relaxed">
+                {c.body}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

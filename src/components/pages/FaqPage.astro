@@ -1,0 +1,429 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_CONTENT, ROUTES, MERGED_FAQS, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const isDe = locale === 'de';
+const content = SITE_CONTENT[locale];
+const routes = ROUTES[locale];
+const allFaqs = MERGED_FAQS[locale];
+
+const categoryLabels: Record<string, { en: string; de: string; count: number }> = {
+  all: {
+    en: 'All Topics',
+    de: 'Alle Themen',
+    count: allFaqs.length,
+  },
+  nocode: {
+    en: 'No-Code & T3Element',
+    de: 'No-Code & T3Element',
+    count: allFaqs.filter((f) => f.category === 'nocode').length,
+  },
+  architecture: {
+    en: 'Architecture & APIs',
+    de: 'Architektur & APIs',
+    count: allFaqs.filter((f) => f.category === 'architecture').length,
+  },
+  enterprise: {
+    en: 'Enterprise & Security',
+    de: 'Enterprise & Sicherheit',
+    count: allFaqs.filter((f) => f.category === 'enterprise').length,
+  },
+};
+
+const categoryBadgeLabels: Record<string, { en: string; de: string }> = {
+  nocode: { en: 'No-Code', de: 'No-Code' },
+  architecture: { en: 'Architecture', de: 'Architektur' },
+  enterprise: { en: 'Enterprise', de: 'Enterprise' },
+};
+
+// FAQPage JSON-LD Schema for Google & AEO search discovery
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: allFaqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a,
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title={isDe ? 'Häufig gestellte Fragen (FAQ) | T3Headless' : 'Frequently Asked Questions (FAQ) | T3Headless'}
+  description={
+    isDe
+      ? 'Alle Antworten zu No-Code-Inhaltselementen in TYPO3, automatischer Next.js-Generierung, API-Performance, Sicherheit und Migration.'
+      : 'Comprehensive technical FAQ covering visual TYPO3 element modeling, automated Next.js code generation, edge API speed, security, and migration.'
+  }
+  locale={locale}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <!-- SECTION 1: HERO HEADER & BREADCRUMBS -->
+  <section class="w-full hairline-b bg-white py-14 lg:py-20">
+    <div class="swiss-container space-y-8">
+      <!-- Breadcrumbs -->
+      <nav aria-label="Breadcrumbs" class="font-mono text-xs text-[#8c8c8c] flex items-center gap-2">
+        <a href={routes.home} class="hover:text-[#222222] transition-colors">{content.nav.home}</a>
+        <span aria-hidden="true">/</span>
+        <span class="text-[#222222] font-semibold">{isDe ? 'FAQ' : 'FAQ'}</span>
+      </nav>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+        <div class="lg:col-span-8 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-[#f7931e]"></span>
+            <span class="eyebrow-label">
+              {isDe ? 'WISSENSBASIS & TECHNISCHE FAQ' : 'KNOWLEDGE BASE & ARCHITECTURE FAQ'}
+            </span>
+          </div>
+
+          <h1 class="display-title text-[#222222]">
+            {isDe ? 'Häufig gestellte Fragen.' : 'Frequently Asked Questions.'}
+          </h1>
+
+          <p class="text-base sm:text-lg text-[#4e4e4e] max-w-2xl leading-relaxed">
+            {
+              isDe
+                ? 'Ausführliche Antworten zu No-Code-Elementen in TYPO3, der automatischen Next.js-Generierung, API-Geschwindigkeit, TYPO3 v13 & v14 Unterstützung und Enterprise-SLA.'
+                : 'Clear, authoritative answers on visual no-code element modeling, automated Next.js code generation, API velocity, TYPO3 v13 and v14 support, and Swiss SLA governance.'
+            }
+          </p>
+        </div>
+
+        <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 lg:items-end">
+          <a href={routes.contact} class="uxis-cta-btn w-full sm:w-auto text-center">
+            <span>{isDe ? 'Ingenieur fragen' : 'Ask an engineer'}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+          <a
+            href={routes.document}
+            class="uxis-cta-outline w-full sm:w-auto text-center"
+          >
+            <span>{isDe ? 'Dokumentation ansehen' : 'Explore Quickstart Docs'}</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Live Search & Interactive Category Filter Bar -->
+      <div class="pt-6 border-t border-[#222222]/10 space-y-4" data-faq-controls>
+        <!-- Search Input -->
+        <div class="relative max-w-xl">
+          <input
+            type="search"
+            id="faq-search-input"
+            placeholder={isDe ? 'Nach Fragen, Elementen, Next.js oder APIs suchen...' : 'Search questions, elements, Next.js, or APIs...'}
+            class="w-full px-4 py-3 pl-11 rounded-full border border-[#d9d9d9] bg-[#f7f7f7] text-sm text-[#222222] placeholder:text-[#8c8c8c] focus:outline-none focus:border-[#222222] focus:bg-white transition-all font-mono"
+            aria-label={isDe ? 'FAQ durchsuchen' : 'Search FAQs'}
+          />
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#8c8c8c] font-mono text-sm pointer-events-none">
+            🔍
+          </span>
+          <button
+            type="button"
+            id="faq-search-clear"
+            class="hidden absolute right-4 top-1/2 -translate-y-1/2 font-mono text-xs text-[#8c8c8c] hover:text-[#222222] cursor-pointer"
+            aria-label="Clear search"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Category Pills Filter -->
+        <div class="flex flex-wrap items-center gap-2" role="tablist" aria-label="FAQ categories">
+          {
+            Object.entries(categoryLabels).map(([catKey, cat], idx) => (
+              <button
+                type="button"
+                role="tab"
+                data-faq-tab={catKey}
+                aria-selected={idx === 0 ? 'true' : 'false'}
+                class:list={[
+                  'faq-cat-btn px-4 py-1.5 rounded-full text-xs font-mono border transition-all cursor-pointer inline-flex items-center gap-2',
+                  idx === 0
+                    ? 'bg-[#222222] text-white border-[#222222] font-semibold shadow-sm'
+                    : 'bg-white text-[#4e4e4e] border-[#d9d9d9] hover:border-[#222222] hover:text-[#222222]',
+                ]}
+              >
+                <span>{isDe ? cat.de : cat.en}</span>
+                <span
+                  class:list={[
+                    'px-1.5 py-0.2 rounded-full text-[10px] font-bold',
+                    idx === 0 ? 'bg-white/20 text-white' : 'bg-[#f7f7f7] text-[#8c8c8c]',
+                  ]}
+                >
+                  {cat.count}
+                </span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: 17 FULL FAQ ACCORDION -->
+  <section class="w-full bg-[#f7f7f7] py-16 lg:py-24">
+    <div class="swiss-container">
+      <div class="max-w-4xl mx-auto space-y-6">
+        <!-- Results Count / Filter Status -->
+        <div class="flex items-center justify-between text-xs font-mono text-[#8c8c8c] px-2">
+          <span id="faq-results-count">
+            {isDe ? `Zeige ${allFaqs.length} Fragen` : `Showing all ${allFaqs.length} questions`}
+          </span>
+          <button
+            type="button"
+            id="faq-expand-all"
+            class="hover:text-[#222222] underline cursor-pointer transition-colors"
+          >
+            {isDe ? 'Alle aufklappen' : 'Expand all'}
+          </button>
+        </div>
+
+        <!-- Empty Results Message -->
+        <div
+          id="faq-empty-state"
+          class="hidden p-12 text-center bg-white rounded-2xl border border-[#222222]/12 space-y-4"
+        >
+          <p class="font-mono text-sm text-[#8c8c8c]">
+            {isDe ? 'Keine Fragen gefunden, die Ihrer Suche entsprechen.' : 'No questions found matching your search.'}
+          </p>
+          <button
+            type="button"
+            id="faq-reset-btn"
+            class="px-4 py-2 rounded-full border border-[#222222] text-xs font-mono text-[#222222] hover:bg-[#222222] hover:text-white transition-colors cursor-pointer"
+          >
+            {isDe ? 'Filter zurücksetzen' : 'Reset filters'}
+          </button>
+        </div>
+
+        <!-- Accordion Container -->
+        <div
+          id="faq-accordion-list"
+          class="border border-[#222222]/12 divide-y divide-[#222222]/12 bg-white rounded-2xl shadow-sm overflow-hidden"
+        >
+          {
+            allFaqs.map((item, idx) => (
+              <details
+                class="faq-item group py-5 px-6 sm:px-8 transition-colors hover:bg-[#f7f7f7]/40"
+                data-faq-id={item.id}
+                data-faq-cat={item.category}
+                data-faq-text={`${item.q.toLowerCase()} ${item.a.toLowerCase()}`}
+                open={idx === 0}
+              >
+                <summary class="flex items-center justify-between gap-4 cursor-pointer list-none font-display text-base sm:text-lg font-semibold text-[#222222] group-hover:text-[#f7931e] transition-colors">
+                  <div class="flex items-start sm:items-center gap-3 sm:gap-4">
+                    <span class="font-mono text-xs text-[#f7931e] pt-1 sm:pt-0 shrink-0 font-bold">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <span class="leading-snug">{item.q}</span>
+                  </div>
+
+                  <div class="flex items-center gap-2.5 shrink-0 ml-2">
+                    <span class="hidden sm:inline-block px-2.5 py-0.5 rounded-full font-mono text-[10px] uppercase font-semibold tracking-wider bg-[#f7f7f7] border border-[#d9d9d9] text-[#4e4e4e]">
+                      {isDe ? categoryBadgeLabels[item.category].de : categoryBadgeLabels[item.category].en}
+                    </span>
+                    <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#d9d9d9] inline-flex items-center justify-center font-mono text-sm group-open:bg-[#222222] group-open:text-white group-open:border-[#222222] group-open:rotate-45 transition-all">
+                      +
+                    </span>
+                  </div>
+                </summary>
+
+                <div class="pt-4 pl-6 sm:pl-9 pr-4 text-sm sm:text-base text-[#4e4e4e] leading-relaxed border-t border-[#222222]/6 mt-4">
+                  {item.a}
+                </div>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: STILL HAVE QUESTIONS ACTION BANNER -->
+  <section class="w-full hairline-b bg-white py-16 lg:py-24">
+    <div class="swiss-container">
+      <div class="rounded-3xl border border-[#222222]/14 bg-[#222222] text-white p-8 sm:p-12 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-lg">
+        <div class="lg:col-span-8 space-y-4">
+          <span class="font-mono text-xs uppercase tracking-widest text-[#f7931e] font-semibold">
+            {isDe ? 'SCHWEIZER ARCHITEKTUR-EXPERTISE' : 'SWISS ARCHITECTURE EXPERTISE'}
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-white">
+            {
+              isDe
+                ? 'Haben Sie eine spezifische Frage zu Ihrem TYPO3-Stack?'
+                : 'Have a specific question about your TYPO3 architecture?'
+            }
+          </h2>
+          <p class="text-sm sm:text-base text-white/80 max-w-xl leading-relaxed">
+            {
+              isDe
+                ? 'Sprechen Sie direkt mit unseren leitenden TYPO3- und Headless-Ingenieuren in Glattpark (Opfikon), Schweiz. Wir unterstützen Sie bei Machbarkeit, Migration und SLA.'
+                : 'Consult directly with our senior TYPO3 and headless engineers in Glattpark (Opfikon), Switzerland. We help you scope feasibility, migration path, and SLAs.'
+            }
+          </p>
+        </div>
+
+        <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 lg:items-end">
+          <a
+            href={content.meta.calLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-6 py-3 rounded-full bg-[#f7931e] hover:bg-[#e07d08] text-[#222222] font-semibold text-sm transition-colors text-center inline-flex items-center justify-center gap-2"
+          >
+            <span>{isDe ? '15-Min Beratung buchen' : 'Book 15-Min Meeting'}</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a
+            href={routes.contact}
+            class="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono text-xs border border-white/20 transition-colors text-center inline-flex items-center justify-center gap-2"
+          >
+            <span>{isDe ? 'Nachricht senden' : 'Send Message'}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  function initFaqPage() {
+    const searchInput = document.getElementById('faq-search-input') as HTMLInputElement | null;
+    const clearBtn = document.getElementById('faq-search-clear') as HTMLButtonElement | null;
+    const expandBtn = document.getElementById('faq-expand-all') as HTMLButtonElement | null;
+    const resetBtn = document.getElementById('faq-reset-btn') as HTMLButtonElement | null;
+    const tabBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-faq-tab]'));
+    const faqItems = Array.from(document.querySelectorAll<HTMLDetailsElement>('.faq-item'));
+    const countEl = document.getElementById('faq-results-count');
+    const emptyState = document.getElementById('faq-empty-state');
+    const accordionList = document.getElementById('faq-accordion-list');
+
+    if (!faqItems.length) return;
+
+    let activeCategory = 'all';
+    let searchQuery = '';
+    let isAllExpanded = false;
+
+    function filterFaqs() {
+      let visibleCount = 0;
+
+      faqItems.forEach((item) => {
+        const cat = item.dataset.faqCat || '';
+        const text = item.dataset.faqText || '';
+
+        const matchesCat = activeCategory === 'all' || cat === activeCategory;
+        const matchesQuery = !searchQuery || text.includes(searchQuery.toLowerCase());
+
+        const isVisible = matchesCat && matchesQuery;
+        item.classList.toggle('hidden', !isVisible);
+        if (isVisible) visibleCount++;
+      });
+
+      if (countEl) {
+        countEl.textContent = `${visibleCount} ${visibleCount === 1 ? 'question' : 'questions'}`;
+      }
+
+      if (emptyState && accordionList) {
+        const isEmpty = visibleCount === 0;
+        emptyState.classList.toggle('hidden', !isEmpty);
+        accordionList.classList.toggle('hidden', isEmpty);
+      }
+
+      if (clearBtn && searchInput) {
+        clearBtn.classList.toggle('hidden', !searchInput.value);
+      }
+    }
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        activeCategory = btn.dataset.faqTab || 'all';
+
+        tabBtns.forEach((b) => {
+          const isSelected = b === btn;
+          b.setAttribute('aria-selected', String(isSelected));
+          b.classList.toggle('bg-[#222222]', isSelected);
+          b.classList.toggle('text-white', isSelected);
+          b.classList.toggle('border-[#222222]', isSelected);
+          b.classList.toggle('font-semibold', isSelected);
+          b.classList.toggle('shadow-sm', isSelected);
+          b.classList.toggle('bg-white', !isSelected);
+          b.classList.toggle('text-[#4e4e4e]', !isSelected);
+          b.classList.toggle('border-[#d9d9d9]', !isSelected);
+
+          const badge = b.querySelector('span:last-child');
+          if (badge) {
+            badge.classList.toggle('bg-white/20', isSelected);
+            badge.classList.toggle('text-white', isSelected);
+            badge.classList.toggle('bg-[#f7f7f7]', !isSelected);
+            badge.classList.toggle('text-[#8c8c8c]', !isSelected);
+          }
+        });
+
+        filterFaqs();
+      });
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = (e.target as HTMLInputElement).value.trim();
+      filterFaqs();
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+        searchQuery = '';
+        searchInput.focus();
+        filterFaqs();
+      }
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      searchQuery = '';
+      activeCategory = 'all';
+      const firstTab = tabBtns[0];
+      firstTab?.click();
+    });
+
+    expandBtn?.addEventListener('click', () => {
+      isAllExpanded = !isAllExpanded;
+      faqItems.forEach((item) => {
+        if (!item.classList.contains('hidden')) {
+          item.open = isAllExpanded;
+        }
+      });
+      expandBtn.textContent = isAllExpanded ? 'Collapse all' : 'Expand all';
+    });
+  }
+
+  initFaqPage();
+  document.addEventListener('astro:page-load', initFaqPage);
+</script>
+
+<style>
+  .faq-cat-btn:hover {
+    background-color: #f7f7f7;
+    color: #222222;
+    border-color: #222222;
+  }
+  .faq-cat-btn[aria-selected="true"] {
+    background-color: #222222 !important;
+    color: #ffffff !important;
+    border-color: #222222 !important;
+  }
+  .faq-cat-btn[aria-selected="true"]:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+  }
+</style>

@@ -1,0 +1,334 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_CONTENT, ROUTES, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const content = SITE_CONTENT[locale];
+const routes = ROUTES[locale];
+const isDe = locale === 'de';
+---
+
+<BaseLayout
+  locale={locale}
+  title={isDe ? 'Kontakt: Sprechen Sie mit unseren TYPO3-Architekten' : "Let's Talk: Contact Our Headless TYPO3 Architects"}
+  description={
+    isDe
+      ? 'Kontaktieren Sie unser Schweizer T3Headless Engineering-Team in Glattpark (Zürich) für eine kostenlose 1:1 Headless TYPO3 Architektur-Beratung.'
+      : 'Contact our Swiss T3Headless engineering team in Glattpark (Zurich) for a free 1:1 Headless TYPO3 architecture consultation or project quote.'
+  }
+  breadcrumbLabel={isDe ? 'Kontakt' : 'Contact'}
+>
+  <!-- UXIS /contacts Signature 50/50 Split Layout Divided by 1px Vertical Hairline -->
+  <section class="w-full hairline-b bg-[#ffffff] min-h-[82vh] flex items-stretch">
+    <div class="swiss-container flex-1 flex">
+      <div class="grid grid-cols-1 lg:grid-cols-12 w-full divide-y lg:divide-y-0 lg:divide-x divide-[#222222]/14">
+        <!-- Left 50% Column: LET'S TALK / Direct Mailto Links / Switzerland HQ -->
+        <div class="lg:col-span-6 py-14 sm:py-20 lg:pr-14 flex flex-col justify-between space-y-12">
+          <div class="space-y-6">
+            <span class="eyebrow-label">{isDe ? 'LET’S TALK / KONTAKT' : "LET'S TALK / CONTACT US"}</span>
+            <h1 class="display-hero text-[#222222]">
+              {isDe ? 'Starten wir Ihr Headless-Projekt.' : "Let's talk."}
+            </h1>
+            <p class="text-base sm:text-lg text-[#4e4e4e] max-w-lg leading-relaxed">
+              {
+                isDe
+                  ? 'Planen Sie einen Relaunch mit Headless TYPO3, benötigen Sie T3Element-Beratung oder möchten Sie in unser 360 Care Programm wechseln? Unser Schweizer Team antwortet innerhalb von 4 Stunden.'
+                  : 'Planning a headless TYPO3 relaunch, exploring T3Element, or looking for 24/7 enterprise maintenance under our 360 Program? Our engineering team responds within 4 business hours.'
+              }
+            </p>
+          </div>
+
+          <!-- UXIS-style Underlined Direct Contact Channels -->
+          <div class="space-y-8 pt-6 border-t border-[#222222]/14">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div class="space-y-1.5">
+                <p class="font-mono text-xs uppercase tracking-wider text-[#4e4e4e]">
+                  {isDe ? 'ALLGEMEIN & SUPPORT' : 'GENERAL & SUPPORT'}
+                </p>
+                <a
+                  href={`mailto:${content.meta.email}`}
+                  class="uxis-underline text-lg font-bold text-[#222222] hover:text-[#f7931e]"
+                >
+                  {content.meta.email}
+                </a>
+              </div>
+
+              <div class="space-y-1.5">
+                <p class="font-mono text-xs uppercase tracking-wider text-[#4e4e4e]">
+                  {isDe ? 'ENTERPRISE & 360 SLA' : 'ENTERPRISE & 360 SLA'}
+                </p>
+                <a
+                  href={`mailto:${content.meta.enterpriseEmail}`}
+                  class="uxis-underline text-lg font-bold text-[#222222] hover:text-[#f7931e]"
+                >
+                  {content.meta.enterpriseEmail}
+                </a>
+              </div>
+
+              <div class="space-y-1.5">
+                <p class="font-mono text-xs uppercase tracking-wider text-[#4e4e4e]">
+                  {isDe ? '1:1 VIDEO-BERATUNG' : '1:1 VIDEO CONSULTATION'}
+                </p>
+                <a
+                  href={content.meta.calLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="uxis-underline text-lg font-bold text-[#f7931e]"
+                >
+                  {isDe ? '15-Min Termin buchen ↗' : 'Book 15-Min Meeting ↗'}
+                </a>
+              </div>
+            </div>
+
+            <!-- Switzerland Office Box -->
+            <div class="p-6 rounded-2xl bg-white border border-[#222222]/14 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="space-y-1">
+                <p class="font-mono text-xs font-bold uppercase text-[#f7931e]">
+                  SWITZERLAND HEADQUARTERS
+                </p>
+                <p class="text-sm font-semibold text-[#222222]">
+                  {content.meta.address}
+                </p>
+              </div>
+              <a
+                href="https://maps.google.com/?q=Thurgauerstrasse+117,+8152+Opfikon,+Switzerland"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="uxis-pill text-xs font-mono shrink-0"
+              >
+                Google Maps ↗
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 50% Column: UXIS Minimalist Bottom-Border Contact Form -->
+        <div class="lg:col-span-6 py-14 sm:py-20 lg:pl-14 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-6 border-b border-[#222222]/14">
+            <span class="font-mono text-xs uppercase tracking-widest text-[#222222] font-semibold">
+              {isDe ? 'PROJEKTANFRAGE SENDEN' : 'PROJECT INQUIRY FORM'}
+            </span>
+            <a
+              href={routes.home}
+              aria-label="Close and return home"
+              class="w-10 h-10 rounded-full border border-[#222222]/25 inline-flex items-center justify-center text-lg hover:bg-[#222222] hover:text-[#ffffff] transition-colors"
+            >
+              ×
+            </a>
+          </div>
+
+          <form
+            id="uxis-contact-form"
+            class="space-y-8 my-auto py-8"
+            data-locale={locale}
+          >
+            <!-- Topic Selector Pills -->
+            <div class="space-y-3">
+              <label class="block font-mono text-xs uppercase tracking-wider text-[#222222] font-semibold">
+                {isDe ? 'WORUM GEHT ES? *' : 'SELECT TOPIC *'}
+              </label>
+              <div class="flex flex-wrap gap-2.5" role="radiogroup" aria-label="Topic Selection">
+                {
+                  [
+                    'Headless TYPO3 Setup',
+                    'T3Element License / Demo',
+                    '360 Care SLA Program',
+                    'Enterprise Consulting',
+                  ].map((topic, idx) => (
+                    <label class="contact-topic-label cursor-pointer select-none">
+                      <input
+                        type="radio"
+                        name="topic"
+                        value={topic}
+                        checked={idx === 0}
+                        class="sr-only contact-topic-input"
+                      />
+                      <span class="contact-topic-pill inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-[#d9d9d9] bg-white text-xs font-mono text-[#222222] hover:border-[#222222] hover:bg-[#f7f7f7] transition-all">
+                        <span class="contact-topic-dot w-2 h-2 rounded-full border border-[#8c8c8c] transition-all"></span>
+                        <span>{topic}</span>
+                      </span>
+                    </label>
+                  ))
+                }
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  placeholder={isDe ? 'IHR NAME *' : 'YOUR NAME *'}
+                  class="uxis-input"
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder={isDe ? 'GESCHÄFTLICHE E-MAIL *' : 'WORK EMAIL *'}
+                  class="uxis-input"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder={isDe ? 'TELEFONNUMMER' : 'PHONE NUMBER'}
+                  class="uxis-input"
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="company"
+                  placeholder={isDe ? 'UNTERNEHMEN' : 'COMPANY NAME'}
+                  class="uxis-input"
+                />
+              </div>
+              <div>
+                <input
+                  type="url"
+                  name="site_url"
+                  placeholder={isDe ? 'PROJEKT-URL (HTTPS://...)' : 'SITE URL (HTTPS://...)'}
+                  class="uxis-input"
+                />
+              </div>
+            </div>
+
+            <div>
+              <textarea
+                name="message"
+                rows="3"
+                required
+                placeholder={isDe ? 'PROJEKTDETAILS & ZEITPLAN *' : 'PROJECT DETAILS, TYPO3 VERSION & GOALS *'}
+                class="uxis-input resize-none"
+              ></textarea>
+            </div>
+
+            <div
+              id="contact-success-banner"
+              class="hidden p-4 rounded-2xl bg-[#222222] text-[#f7931e] font-mono text-xs"
+            >
+              ✓ {
+                isDe
+                  ? 'Vielen Dank! Ihre Anfrage wurde an unser Engineering-Team übermittelt.'
+                  : 'Thank you! Your inquiry has been submitted to our engineering team.'
+              }
+            </div>
+
+            <div
+              id="contact-error-banner"
+              class="hidden p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 font-mono text-xs"
+            ></div>
+
+            <!-- UXIS Full-Width Dark/Orange Pill Submit CTA -->
+            <button
+              id="contact-submit-btn"
+              type="submit"
+              class="w-full py-4 px-8 rounded-full bg-[#222222] hover:bg-[#f7931e] text-[#ffffff] hover:text-[#222222] font-display font-bold text-base tracking-tight transition-all flex items-center justify-between cursor-pointer group disabled:opacity-60"
+            >
+              <span id="contact-submit-label">{isDe ? 'Anfrage absenden' : 'Submit request'}</span>
+              <span class="group-hover:translate-x-2 transition-transform">→</span>
+            </button>
+          </form>
+
+          <script>
+            import { submitContactForm } from '../../lib/crm';
+
+            function initContactForm() {
+              const form = document.getElementById('uxis-contact-form') as HTMLFormElement | null;
+              if (!form || form.dataset.bound === 'true') return;
+              form.dataset.bound = 'true';
+
+              const successEl = document.getElementById('contact-success-banner');
+              const errorEl = document.getElementById('contact-error-banner');
+              const btn = document.getElementById('contact-submit-btn') as HTMLButtonElement | null;
+              const labelEl = document.getElementById('contact-submit-label');
+              const isDe = form.dataset.locale === 'de';
+              const defaultLabel = labelEl?.textContent || (isDe ? 'Anfrage absenden' : 'Submit request');
+
+              form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                successEl?.classList.add('hidden');
+                errorEl?.classList.add('hidden');
+
+                const fd = new FormData(form);
+                if (btn) btn.disabled = true;
+                if (labelEl) labelEl.textContent = isDe ? 'Wird gesendet…' : 'Submitting…';
+
+                const result = await submitContactForm({
+                  name: String(fd.get('name') || ''),
+                  email: String(fd.get('email') || ''),
+                  topic: String(fd.get('topic') || 'General Inquiry'),
+                  message: String(fd.get('message') || ''),
+                  phone: String(fd.get('phone') || ''),
+                  company: String(fd.get('company') || ''),
+                  site_url: String(fd.get('site_url') || ''),
+                });
+
+                if (btn) btn.disabled = false;
+                if (labelEl) labelEl.textContent = defaultLabel;
+
+                if (result.ok) {
+                  if (successEl) {
+                    const leadRef = result.lead ? ` (${result.lead})` : '';
+                    successEl.textContent = isDe
+                      ? `✓ Vielen Dank! Ihre Anfrage wurde an unser Engineering-Team übermittelt${leadRef}.`
+                      : `✓ Thank you! Your inquiry has been submitted to our engineering team${leadRef}.`;
+                    successEl.classList.remove('hidden');
+                  }
+                  form.reset();
+                } else if (errorEl) {
+                  errorEl.textContent = `✕ ${result.error || (isDe ? 'Senden fehlgeschlagen. Bitte versuchen Sie es erneut.' : 'Submission failed. Please try again.')}`;
+                  errorEl.classList.remove('hidden');
+                }
+              });
+            }
+
+            initContactForm();
+            document.addEventListener('astro:page-load', initContactForm);
+          </script>
+
+          <p class="text-xs font-mono text-[#4e4e4e]">
+            Protected by Swiss Data Privacy (FADP / GDPR). Need urgent SLA help?{' '}
+            <a href={routes.supportTicket} class="text-[#f7931e] underline">
+              Open a Support Ticket →
+            </a>
+          </p>
+
+          <style>
+            .contact-topic-label {
+              cursor: pointer;
+              display: inline-flex;
+            }
+            .contact-topic-pill {
+              cursor: pointer;
+              user-select: none;
+            }
+            .contact-topic-input:checked + .contact-topic-pill {
+              background-color: #222222 !important;
+              color: #ffffff !important;
+              border-color: #222222 !important;
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+            }
+            .contact-topic-input:checked + .contact-topic-pill .contact-topic-dot {
+              border-color: #f7931e !important;
+              background-color: #f7931e !important;
+              box-shadow: 0 0 0 2px rgba(247, 147, 30, 0.35);
+            }
+          </style>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

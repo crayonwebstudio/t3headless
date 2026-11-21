@@ -1,0 +1,233 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import TopUtilityBar from '../components/layout/TopUtilityBar.astro';
+import FloatingDock from '../components/layout/FloatingDock.astro';
+import SwissFooter from '../components/layout/SwissFooter.astro';
+import CookieConsent from '../components/layout/CookieConsent.astro';
+import { SITE_CONTENT, ROUTES, getEquivalentRoute, type Locale } from '../lib/i18n';
+
+interface Props {
+  title?: string;
+  description?: string;
+  locale?: Locale;
+  breadcrumbLabel?: string;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { locale = 'en', title, description, breadcrumbLabel, schema } = Astro.props;
+const content = SITE_CONTENT[locale];
+const routes = ROUTES[locale];
+const pageTitle = title ? `${title} | T3Headless` : content.meta.siteTitle;
+const pageDescription = description || content.meta.description;
+
+const siteOrigin = 'https://t3headless.com';
+const cleanPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const canonicalUrl = `${siteOrigin}${cleanPath === '/' ? '/' : cleanPath}`;
+const enPath = getEquivalentRoute(cleanPath, 'en');
+const dePath = getEquivalentRoute(cleanPath, 'de');
+const enHref = `${siteOrigin}${enPath === '/' ? '/' : enPath}`;
+const deHref = `${siteOrigin}${dePath}`;
+const ogImage = `${siteOrigin}/images/logo/t3headless-color.png`;
+const isHome = cleanPath === '/' || cleanPath === '/de';
+
+// Build BreadcrumbList JSON-LD for subpages
+const breadcrumbSchema = !isHome
+  ? {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: content.nav.home,
+          item: `${siteOrigin}${routes.home}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: breadcrumbLabel || title || 'Page',
+          item: canonicalUrl,
+        },
+      ],
+    }
+  : null;
+
+// Core Entity Knowledge Graph (Organization + WebSite + SoftwareApplication)
+const baseGraph: Record<string, unknown>[] = [
+  {
+    '@type': ['Organization', 'ProfessionalService'],
+    '@id': `${siteOrigin}/#organization`,
+    name: 'T3Headless',
+    alternateName: 'T3Headless & T3Element Switzerland',
+    url: siteOrigin,
+    logo: {
+      '@type': 'ImageObject',
+      url: ogImage,
+    },
+    description: content.meta.description,
+    email: content.meta.email,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Thurgauerstrasse 117',
+      postalCode: '8152',
+      addressLocality: 'Opfikon (Glattpark)',
+      addressCountry: 'CH',
+    },
+    areaServed: ['CH', 'DE', 'AT', 'EU', 'US', 'Global'],
+    knowsAbout: [
+      'Headless TYPO3 CMS',
+      'TYPO3 EXT:t3headless',
+      'T3Element Zero-Fluid Content Block Engine',
+      'Decoupled Page Tree Routing',
+      'Next.js & React Enterprise Frontends',
+      'TYPO3 LTS Upgrades & 360 Care SLA',
+    ],
+  },
+  {
+    '@type': 'WebSite',
+    '@id': `${siteOrigin}/#website`,
+    url: siteOrigin,
+    name: 'T3Headless',
+    publisher: { '@id': `${siteOrigin}/#organization` },
+    inLanguage: ['en', 'de'],
+  },
+  {
+    '@type': 'SoftwareApplication',
+    '@id': `${siteOrigin}/#software`,
+    name: 'T3Headless & T3Element Engine',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Linux, Docker, Cloud, TYPO3 v13/v14 LTS',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'CHF',
+      description: 'Free architecture consultation & starter blueprint',
+    },
+    provider: { '@id': `${siteOrigin}/#organization` },
+  },
+];
+
+if (breadcrumbSchema) {
+  baseGraph.push(breadcrumbSchema);
+}
+if (schema) {
+  if (Array.isArray(schema)) {
+    baseGraph.push(...schema);
+  } else {
+    baseGraph.push(schema);
+  }
+}
+
+const jsonLdPayload = {
+  '@context': 'https://schema.org',
+  '@graph': baseGraph,
+};
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="T3Headless Switzerland" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- SEO Canonical & Bilingual Hreflang Tags -->
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="de" href={deHref} />
+    <link rel="alternate" hreflang="x-default" href={enHref} />
+
+    <!-- GEO LLM Discovery Link -->
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Architecture & Citation Summary" />
+
+    <!-- OpenGraph Metadata -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="T3Headless" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={locale === 'de' ? 'de_CH' : 'en_US'} />
+    <meta property="og:locale:alternate" content={locale === 'de' ? 'en_US' : 'de_CH'} />
+
+    <!-- Twitter / X Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Google Fonts: Plus Jakarta Sans, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- AEO / GEO Structured Data Knowledge Graph (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLdPayload)} />
+
+    <ClientRouter />
+
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtm.js?id=G-C8GCWJ3L3M"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    </script>
+  </head>
+  <body class="bg-white text-[#222222] antialiased selection:bg-[#222222] selection:text-white">
+    <!-- SXO Accessibility Skip Link -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:rounded-full focus:bg-[#222222] focus:text-white focus:font-mono focus:text-xs"
+    >
+      {locale === 'de' ? 'Zum Hauptinhalt springen' : 'Skip to main content'}
+    </a>
+
+    <TopUtilityBar locale={locale} />
+
+    <!-- SXO Visible Breadcrumb Bar on Subpages -->
+    {
+      !isHome && (
+        <nav aria-label="Breadcrumb" class="w-full hairline-b bg-[#f7f7f7]/70">
+          <div class="swiss-container py-2.5 flex items-center justify-between text-xs font-mono text-[#4e4e4e]">
+            <ol class="flex items-center gap-2">
+              <li>
+                <a href={routes.home} class="hover:text-[#f7931e] transition-colors">
+                  {content.nav.home}
+                </a>
+              </li>
+              <li aria-hidden="true" class="opacity-40">/</li>
+              <li class="text-[#222222] font-semibold" aria-current="page">
+                {breadcrumbLabel || title}
+              </li>
+            </ol>
+          </div>
+        </nav>
+      )
+    }
+
+    <main id="main-content" class="min-h-screen">
+      <slot />
+    </main>
+
+    <SwissFooter locale={locale} />
+    <FloatingDock locale={locale} />
+    <CookieConsent locale={locale} />
+
+    <script>
+      import { initUxisMotion } from '../scripts/motion';
+
+      document.addEventListener('astro:page-load', () => {
+        initUxisMotion();
+      });
+    </script>
+  </body>
+</html>

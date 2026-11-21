@@ -1,0 +1,33 @@
+# T3Headless - Enterprise Headless TYPO3 CMS & T3Element Solutions
+# SEO & GEO (Generative Engine Optimization) Crawler Policy
+
+User-agent: *
+Allow: /
+
+# Explicitly allow AI Answer & Generative Search Engines (GEO / AEO)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://t3headless.com/sitemap.xml
+# LLM Knowledge & Architecture Index: https://t3headless.com/llms.txt

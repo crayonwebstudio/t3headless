@@ -1,0 +1,630 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArchitectureRadar from '../widgets/ArchitectureRadar.astro';
+import HeadlessFlowLoop from '../widgets/HeadlessFlowLoop.astro';
+import LiveJsonPreview from '../widgets/LiveJsonPreview.astro';
+import { SITE_CONTENT, ROUTES, T3ELEMENT_LINKS, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const content = SITE_CONTENT[locale];
+const routes = ROUTES[locale];
+
+const faqSchema = {
+  '@type': 'FAQPage',
+  mainEntity: content.faqs.items.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+---
+
+<BaseLayout
+  locale={locale}
+  schema={faqSchema}
+  title={
+    locale === 'de'
+      ? 'T3Headless Architektur-Benchmark & Live-Vorschau | T3Headless'
+      : 'T3Headless Architecture Benchmark & Live Preview | T3Headless'
+  }
+  breadcrumbLabel="Architecture Benchmark"
+>
+  <!-- SECTION 1: T3Element-Style Hero (.hairline-grid-2 with + Crosshairs flush with Header bottom hairline) -->
+  <section class="w-full bg-white">
+    <div class="swiss-container">
+      <div class="grid grid-cols-1 lg:grid-cols-12 border-b border-[#222222]/12 relative divide-y lg:divide-y-0 lg:divide-x divide-[#222222]/12">
+        <!-- Architectural + Crosshairs -->
+        <span class="crosshair crosshair--tl" aria-hidden="true"></span>
+        <span class="crosshair crosshair--tc" aria-hidden="true"></span>
+        <span class="crosshair crosshair--tr" aria-hidden="true"></span>
+        <span class="crosshair crosshair--bl" aria-hidden="true"></span>
+        <span class="crosshair crosshair--bc" aria-hidden="true"></span>
+        <span class="crosshair crosshair--br" aria-hidden="true"></span>
+
+        <!-- Left Column: Kinetic Live Headless Architecture Pipeline -->
+        <div class="lg:col-span-6 p-6 sm:p-10 lg:p-12 flex flex-col justify-center">
+          <ArchitectureRadar locale={locale} />
+        </div>
+
+        <!-- Right Column: Display H1, Pill Tags & Inline Demo Form (T3Element Hero Right style) -->
+        <div class="lg:col-span-6 p-6 sm:p-10 lg:p-12 flex flex-col justify-between space-y-8">
+          <div class="space-y-5">
+            <div>
+              <span class="uxis-pill uxis-pill-orange font-mono text-[0.72rem] uppercase tracking-wider">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#f7931e]" aria-hidden="true"></span>
+                <span>{content.hero.eyebrow}</span>
+              </span>
+            </div>
+
+            <h1 class="display-hero text-[#222222]">
+              {content.hero.title}
+            </h1>
+
+            <p class="text-base sm:text-[1.05rem] text-[#4e4e4e] max-w-xl leading-relaxed">
+              {content.hero.subtitle}
+            </p>
+
+            <div class="flex flex-wrap gap-2 pt-1">
+              <span class="uxis-pill font-mono text-[0.72rem] uppercase">TYPO3 v13 / v14 LTS</span>
+              <span class="uxis-pill font-mono text-[0.72rem] uppercase">Zero Fluid Overhead</span>
+              <span class="uxis-pill font-mono text-[0.72rem] uppercase">EXT:t3headless + T3Element</span>
+            </div>
+          </div>
+
+          <div class="space-y-6 pt-2">
+            <!-- T3Element-Style Inline Underline Demo Form -->
+            <form
+              id="hero-demo-form"
+              class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2"
+              data-locale={locale}
+            >
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder={locale === 'de' ? 'Ihre geschäftliche E-Mail' : 'Your work email'}
+                class="uxis-input flex-1"
+              />
+              <button id="hero-demo-btn" type="submit" class="uxis-cta-btn shrink-0 disabled:opacity-60">
+                <span id="hero-demo-label">{locale === 'de' ? 'Demo anfordern' : 'Get a demo'}</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </form>
+            <p id="hero-demo-msg" class="hidden font-mono text-xs text-[#222222]"></p>
+
+            <script>
+              import { requestDemo } from '../../lib/crm';
+
+              function initHeroDemoForm() {
+                const form = document.getElementById('hero-demo-form') as HTMLFormElement | null;
+                if (!form || form.dataset.bound === 'true') return;
+                form.dataset.bound = 'true';
+
+                const msgEl = document.getElementById('hero-demo-msg');
+                const btn = document.getElementById('hero-demo-btn') as HTMLButtonElement | null;
+                const labelEl = document.getElementById('hero-demo-label');
+                const isDe = form.dataset.locale === 'de';
+                const defaultLabel = labelEl?.textContent || (isDe ? 'Demo anfordern' : 'Get a demo');
+
+                form.addEventListener('submit', async (e) => {
+                  e.preventDefault();
+                  if (!msgEl) return;
+                  msgEl.classList.add('hidden');
+                  msgEl.classList.remove('text-red-600');
+                  msgEl.classList.add('text-[#222222]');
+
+                  const fd = new FormData(form);
+                  const email = String(fd.get('email') || '');
+                  if (btn) btn.disabled = true;
+                  if (labelEl) labelEl.textContent = isDe ? 'Wird gesendet…' : 'Sending…';
+
+                  const result = await requestDemo(email);
+
+                  if (btn) btn.disabled = false;
+                  if (labelEl) labelEl.textContent = defaultLabel;
+
+                  if (result.ok) {
+                    if (result.status === 'already_requested') {
+                      msgEl.textContent = isDe
+                        ? '✓ Demo für diese E-Mail bereits angefordert. Wir melden uns in Kürze.'
+                        : '✓ Demo already requested for this email. Our team will follow up shortly.';
+                    } else {
+                      msgEl.textContent = isDe
+                        ? '✓ Demo-Anfrage erhalten. Wir melden uns in Kürze.'
+                        : '✓ Demo request received. Our team will reply shortly.';
+                      form.reset();
+                    }
+                    msgEl.classList.remove('hidden');
+                  } else {
+                    msgEl.textContent = `✕ ${result.error || (isDe ? 'Anfrage fehlgeschlagen.' : 'Request failed. Please try again.')}`;
+                    msgEl.classList.remove('text-[#222222]', 'hidden');
+                    msgEl.classList.add('text-red-600');
+                  }
+                });
+              }
+
+              initHeroDemoForm();
+              document.addEventListener('astro:page-load', initHeroDemoForm);
+            </script>
+
+            <!-- Secondary Links & Consultation Strip -->
+            <div class="pt-5 border-t border-[#222222]/12 flex flex-wrap items-center justify-between gap-4">
+              <a
+                href={routes.builtWith}
+                class="uxis-underline text-sm font-semibold text-[#222222] inline-flex items-center gap-1.5"
+              >
+                <span>{content.hero.secondaryCta}</span>
+                <span aria-hidden="true">→</span>
+              </a>
+
+              <a
+                href={content.meta.calLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-xs font-mono text-[#4e4e4e] hover:text-[#222222] transition-colors inline-flex items-center gap-1.5"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-[#f7931e]"></span>
+                <span>{content.hero.consultationBadge} ↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: Capabilities Split Grid (Left Deliverable Pills, Right 5-Stage Pipeline) -->
+  <section class="w-full hairline-t hairline-b bg-white py-20 lg:py-28">
+    <div class="swiss-container">
+      <!-- Top Intro Header -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-16 border-b border-[#222222]/12" data-uxis-reveal>
+        <div class="lg:col-span-4">
+          <span class="eyebrow-label">{content.capabilities.eyebrow}</span>
+        </div>
+        <div class="lg:col-span-8 space-y-4">
+          <h2 class="display-section text-[#222222]">
+            {content.capabilities.heading}
+          </h2>
+          <p class="text-base sm:text-lg text-[#4e4e4e] leading-relaxed max-w-3xl">
+            {content.capabilities.description}
+          </p>
+        </div>
+      </div>
+
+      <!-- 2-Column UXIS Split: Left Pill Clusters | Right Numbered Pipeline -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#222222]/12">
+        <!-- Left Column: Outlined Pill Clusters -->
+        <div class="lg:col-span-6 py-12 lg:pr-12 space-y-10">
+          {
+            content.capabilities.clusters.map((cluster, idx) => (
+              <div class="space-y-4 pb-8 border-b border-[#222222]/12 last:border-b-0 last:pb-0" data-uxis-reveal>
+                <div class="flex items-center justify-between">
+                  <h3 class="font-mono text-sm font-bold tracking-wider uppercase text-[#222222]">
+                    {cluster.category}
+                  </h3>
+                  <span class="font-mono text-xs text-[#f7931e] font-semibold">0{idx + 1}</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  {cluster.tags.map((tag, tagIdx) => (
+                    <span class:list={['uxis-pill', tagIdx === 0 ? 'uxis-pill-orange' : '']}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- Right Column: 5-Stage Headless Engineering Pipeline -->
+        <div class="lg:col-span-6 py-12 lg:pl-12 divide-y divide-[#222222]/12">
+          {
+            content.capabilities.pipeline.map((item) => (
+              <div class="py-6 first:pt-0 last:pb-0 flex items-start gap-5 group" data-uxis-reveal>
+                <span class="w-11 h-11 rounded-full bg-[#f7f7f7] border border-[#222222]/14 group-hover:bg-[#222222] group-hover:text-white text-[#222222] font-mono text-xs font-bold inline-flex items-center justify-center shrink-0 transition-colors">
+                  {item.step}
+                </span>
+                <div class="space-y-1.5">
+                  <h4 class="text-xl font-bold text-[#222222]">
+                    {item.title}
+                  </h4>
+                  <p class="text-sm sm:text-base text-[#4e4e4e] leading-relaxed">
+                    {item.summary}
+                  </p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Interactive Live JSON API -> Component Inspector -->
+      <div class="pt-12" data-uxis-reveal>
+        <LiveJsonPreview />
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: Ecosystem Showcase Cards (Clean Monochrome + Dark Charcoal Cards like T3Element) -->
+  <section class="w-full hairline-b bg-[#f7f7f7] py-20 lg:py-28">
+    <div class="swiss-container space-y-14">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6" data-uxis-reveal>
+        <div class="space-y-3">
+          <span class="eyebrow-label">{content.showcase.eyebrow}</span>
+          <h2 class="display-section text-[#222222]">{content.showcase.heading}</h2>
+        </div>
+        <a href={routes.document} class="uxis-cta-outline shrink-0">
+          <span>{content.showcase.viewAllCta}</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {
+          content.showcase.cards.map((card, idx) => {
+            const isDark = card.theme === 'dark' || idx === 0;
+            const themeStyles = isDark
+              ? 'bg-[#222222] text-white border-[#222222]'
+              : 'bg-white text-[#222222] border-[#222222]/12';
+
+            const pillStyles = isDark
+              ? 'border-white/25 text-white'
+              : 'border-[#d9d9d9] text-[#222222]';
+
+            return (
+              <a
+                href={card.href}
+                class:list={[
+                  'group rounded-2xl p-8 sm:p-10 border flex flex-col justify-between min-h-[340px] transition-transform duration-300 hover:-translate-y-1',
+                  themeStyles,
+                ]}
+                data-uxis-reveal
+              >
+                <div class="space-y-5">
+                  <div class="flex items-center justify-between gap-3">
+                    <span class="font-mono text-xs uppercase tracking-widest opacity-75 inline-flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#f7931e]"></span>
+                      {card.badge}
+                    </span>
+                    <span class="w-9 h-9 rounded-full border border-current/25 inline-flex items-center justify-center group-hover:bg-[#f7931e] group-hover:border-[#f7931e] group-hover:text-white transition-colors">
+                      ↗
+                    </span>
+                  </div>
+
+                  <h3 class="text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
+                    {card.title}
+                  </h3>
+
+                  <p class="text-sm sm:text-base opacity-80 leading-relaxed max-w-xl">
+                    {card.description}
+                  </p>
+                </div>
+
+                <div class="pt-7 mt-7 border-t border-current/15 flex flex-wrap items-center justify-between gap-4">
+                  <div class="flex flex-wrap gap-2">
+                    {card.tags.map((t) => (
+                      <span class:list={['px-3 py-1 rounded-full border text-xs font-mono', pillStyles]}>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  <span class="font-mono text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-current/10">
+                    {card.metric}
+                  </span>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+      <!-- T3Headless × T3Element Unified Product Bridge -->
+      <div
+        class="rounded-2xl border border-[#222222]/14 bg-white p-7 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
+        data-uxis-reveal
+      >
+        <div class="lg:col-span-7 space-y-4">
+          <h3 class="text-2xl sm:text-3xl font-bold text-[#222222] tracking-tight">
+            {
+              locale === 'de'
+                ? 'Visuell in T3Element bauen. Als JSON über T3Headless ausliefern.'
+                : 'Build visually in T3Element. Deliver as JSON via T3Headless.'
+            }
+          </h3>
+          <p class="text-sm sm:text-base text-[#4e4e4e] leading-relaxed max-w-2xl">
+            {
+              locale === 'de'
+                ? 'T3Element ist unser offizieller Content-Block-Builder. Entwerfen Sie eigene TYPO3-Elemente per Drag-and-Drop und nutzen Sie sie sofort in Ihrer entkoppelten React- oder Next.js-App.'
+                : 'T3Element is our companion TYPO3 Content Block Builder. Design custom TYPO3 elements visually in minutes and consume them directly as structured JSON in T3Headless.'
+            }
+          </p>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end justify-center gap-3">
+          <div class="flex flex-wrap gap-3">
+            <a
+              href={T3ELEMENT_LINKS.appRegisterUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="uxis-cta-btn"
+            >
+              <span>{locale === 'de' ? 'T3Element Builder öffnen' : 'Launch T3Element Builder'}</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a href={routes.builtWith} class="uxis-cta-outline">
+              <span>{locale === 'de' ? 'Integration ansehen' : 'How they connect'}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <code class="px-3.5 py-2 rounded-xl bg-[#f7f7f7] border border-[#222222]/12 font-mono text-xs text-[#222222]">
+            {T3ELEMENT_LINKS.t3headlessComposerCmd}
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: Thesis Loop ("Model. Deliver. Render.") -->
+  <HeadlessFlowLoop locale={locale} />
+
+  <!-- SECTION 5: 8-Cell Swiss Architectural Matrix -->
+  <section class="w-full hairline-b bg-white py-20 lg:py-28">
+    <div class="swiss-container space-y-14">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end" data-uxis-reveal>
+        <div class="lg:col-span-5">
+          <span class="eyebrow-label">{content.features.eyebrow}</span>
+          <h2 class="display-section mt-3 text-[#222222]">{content.features.heading}</h2>
+        </div>
+        <div class="lg:col-span-7 lg:text-right">
+          <a href={routes.document} class="uxis-cta-outline">
+            <span>Explore extension documentation</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 4x2 Swiss Architectural Hairline Matrix -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-l border-[#222222]/12 bg-white">
+        {
+          content.features.items.map((feat) => (
+            <article
+              class="p-7 sm:p-8 border-r border-b border-[#222222]/12 flex flex-col justify-between hover:bg-[#f7f7f7] transition-colors group"
+              data-uxis-reveal
+            >
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-[#f7931e]">{feat.code}</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#222222]/20 group-hover:bg-[#f7931e] transition-colors"></span>
+                </div>
+                <h3 class="text-xl font-bold text-[#222222] leading-snug">
+                  {feat.title}
+                </h3>
+                <p class="text-sm text-[#4e4e4e] leading-relaxed">
+                  {feat.description}
+                </p>
+              </div>
+
+              <div class="pt-6 mt-6 border-t border-[#222222]/10 flex flex-wrap gap-1.5">
+                {feat.deliverables.map((del) => (
+                  <span class="px-2.5 py-1 rounded-full bg-white border border-[#d9d9d9] text-[11px] font-mono text-[#222222]">
+                    {del}
+                  </span>
+                ))}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: Impact Table, KPI Stats & Architecture Comparison Matrix -->
+  <section class="w-full hairline-b bg-[#f7f7f7] py-20 lg:py-28">
+    <div class="swiss-container space-y-16">
+      <div class="space-y-3" data-uxis-reveal>
+        <span class="eyebrow-label">{content.benchmarks.eyebrow}</span>
+        <h2 class="display-section text-[#222222]">{content.benchmarks.heading}</h2>
+      </div>
+
+      <!-- Numbered Impact Rows -->
+      <div class="border-t border-[#222222]/12 divide-y divide-[#222222]/12 bg-white rounded-2xl border overflow-hidden">
+        {
+          content.benchmarks.rows.map((row) => (
+            <div
+              class="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-4 items-center hover:bg-[#f7f7f7]/70 transition-colors"
+              data-uxis-reveal
+            >
+              <div class="lg:col-span-1 font-mono text-sm font-bold text-[#f7931e]">
+                {row.rank}
+              </div>
+              <div class="lg:col-span-4 text-xl sm:text-2xl font-bold text-[#222222]">
+                {row.domain}
+              </div>
+              <div class="lg:col-span-3">
+                <span class="uxis-pill uxis-pill-orange font-mono text-xs font-semibold">
+                  {row.impact}
+                </span>
+              </div>
+              <div class="lg:col-span-4 text-sm sm:text-base text-[#4e4e4e]">
+                {row.summary}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- 4-Column KPI Stat Strip -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 border border-[#222222]/12 rounded-2xl overflow-hidden bg-white divide-y lg:divide-y-0 divide-x divide-[#222222]/12">
+        {
+          content.benchmarks.stats.map((stat) => (
+            <div class="p-8 space-y-2" data-uxis-reveal>
+              <div class="text-4xl sm:text-5xl font-bold tracking-tight text-[#222222]">
+                {stat.value}
+              </div>
+              <p class="text-xs sm:text-sm font-mono text-[#4e4e4e] uppercase tracking-wider">
+                {stat.label}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- GEO / AEO Structured Architecture Comparison Matrix -->
+      <div class="rounded-2xl border border-[#222222]/12 overflow-hidden bg-white" data-uxis-reveal>
+        <div class="p-6 sm:p-8 border-b border-[#222222]/12 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <span class="eyebrow-label">
+              {locale === 'de' ? 'ARCHITEKTUR-VERGLEICHSMATRIX' : 'ARCHITECTURE COMPARISON MATRIX'}
+            </span>
+            <h3 class="text-xl sm:text-2xl font-bold text-[#222222]">
+              {
+                locale === 'de'
+                  ? 'T3Headless + T3Element im direkten Architektur-Vergleich'
+                  : 'How T3Headless + T3Element compares to legacy & SaaS alternatives'
+              }
+            </h3>
+          </div>
+          <span class="font-mono text-xs text-[#8c8c8c]">
+            {locale === 'de' ? 'Quelle: T3Headless Benchmark 2026' : 'Source: T3Headless Benchmark 2026'}
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-[#222222]/12 bg-[#222222] text-white font-mono text-xs uppercase">
+                <th class="py-4 px-6">
+                  {locale === 'de' ? 'Architektur-Kriterium' : 'Architectural Dimension'}
+                </th>
+                <th class="py-4 px-6 opacity-75">
+                  {locale === 'de' ? 'Klassisches Fluid TYPO3' : 'Traditional Fluid TYPO3'}
+                </th>
+                <th class="py-4 px-6 opacity-75">
+                  {locale === 'de' ? 'Generisches SaaS Headless CMS' : 'Generic SaaS Headless CMS'}
+                </th>
+                <th class="py-4 px-6 text-[#f7931e] font-bold">
+                  T3Headless + T3Element
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#222222]/12">
+              <tr class="bg-white">
+                <td class="py-4 px-6 font-semibold text-[#222222]">
+                  {locale === 'de' ? 'Nativer Hierarchischer Seitenbaum' : 'Native Hierarchical Page Tree'}
+                </td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✓ {locale === 'de' ? 'Vorhanden' : 'Included'}</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✕ {locale === 'de' ? 'Flache Content-Listen' : 'Flat collections only'}</td>
+                <td class="py-4 px-6 font-bold text-[#222222]">
+                  ✓ {locale === 'de' ? '100% im JSON-Routing erhalten' : '100% preserved in JSON API'}
+                </td>
+              </tr>
+              <tr class="bg-[#f7f7f7]/60">
+                <td class="py-4 px-6 font-semibold text-[#222222]">
+                  {locale === 'de' ? 'Fluid-Template-Aufwand' : 'Fluid Template Overhead'}
+                </td>
+                <td class="py-4 px-6 text-[#4e4e4e]">{locale === 'de' ? 'Hoch (Fluid + ViewHelper)' : 'High (Fluid + ViewHelpers)'}</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">N/A</td>
+                <td class="py-4 px-6 font-bold text-[#f7931e]">
+                  {locale === 'de' ? '0 Fluid-Templates (Direktes JSON)' : '0 Fluid Templates (Direct JSON)'}
+                </td>
+              </tr>
+              <tr class="bg-white">
+                <td class="py-4 px-6 font-semibold text-[#222222]">
+                  {locale === 'de' ? 'Edge API Antwortzeit (TTFB)' : 'Edge API Response Time (TTFB)'}
+                </td>
+                <td class="py-4 px-6 text-[#4e4e4e]">180ms - 450ms</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">45ms - 120ms</td>
+                <td class="py-4 px-6 font-bold text-[#222222]">&lt; 18ms (Edge CDN JSON)</td>
+              </tr>
+              <tr class="bg-[#f7f7f7]/60">
+                <td class="py-4 px-6 font-semibold text-[#222222]">
+                  {locale === 'de' ? 'Datenhoheit & Private VPC' : 'Data Sovereignty & Private VPC'}
+                </td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✓ Self-Hosted</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✕ Cloud Vendor Lock-in</td>
+                <td class="py-4 px-6 font-bold text-[#222222]">
+                  ✓ {locale === 'de' ? 'Swiss / EU Private Cloud Ready' : 'Swiss / EU Private VPC Ready'}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: Swiss Hairline FAQ Accordion -->
+  <section id="faqs" class="w-full bg-white py-20 lg:py-28">
+    <div class="swiss-container">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <!-- Left Sticky Header -->
+        <div class="lg:col-span-4 space-y-5">
+          <span class="eyebrow-label">{content.faqs.eyebrow}</span>
+          <h2 class="display-section text-[#222222]">{content.faqs.heading}</h2>
+          <p class="text-sm sm:text-base text-[#4e4e4e] leading-relaxed">
+            {
+              locale === 'de'
+                ? 'Haben Sie eine spezifische Frage zu TYPO3 Headless oder T3Element?'
+                : 'Have a specific architectural question about TYPO3 Headless or T3Element?'
+            }
+          </p>
+          <div class="pt-2">
+            <a href={routes.contact} class="uxis-cta-btn">
+              <span>{locale === 'de' ? 'Ingenieur fragen' : 'Ask an engineer'}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right 5-Item Hairline Accordion + View All Button -->
+        <div class="lg:col-span-8 border-t border-[#222222]/12 divide-y divide-[#222222]/12">
+          {
+            content.faqs.items.slice(0, 5).map((item, idx) => (
+              <details class="group py-5" open={idx === 0}>
+                <summary class="flex items-center justify-between gap-4 cursor-pointer list-none font-display text-lg sm:text-xl font-semibold text-[#222222] group-hover:text-[#f7931e] transition-colors">
+                  <div class="flex items-center gap-4">
+                    <span class="font-mono text-xs text-[#f7931e]">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <span>{item.q}</span>
+                  </div>
+                  <span class="w-8 h-8 rounded-full border border-[#d9d9d9] inline-flex items-center justify-center font-mono text-sm shrink-0 group-open:bg-[#222222] group-open:text-white group-open:border-[#222222] group-open:rotate-45 transition-all">
+                    +
+                  </span>
+                </summary>
+                <div class="pt-4 pl-8 pr-4 text-sm sm:text-base text-[#4e4e4e] leading-relaxed">
+                  {item.a}
+                </div>
+              </details>
+            ))
+          }
+
+          <!-- View all FAQs button -->
+          <div class="py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-0.5">
+              <p class="font-display font-semibold text-sm text-[#222222]">
+                {locale === 'de' ? 'Weitere technische und architektonische Fragen?' : 'More architectural and technical questions?'}
+              </p>
+              <p class="font-mono text-xs text-[#8c8c8c]">
+                {locale === 'de' ? 'Entdecken Sie alle Antworten auf unserer FAQ-Seite.' : 'Explore all answers in our dedicated knowledge base.'}
+              </p>
+            </div>
+            <a
+              href={routes.faq}
+              class="px-5 py-2.5 rounded-full bg-[#222222] hover:bg-black text-white font-semibold text-xs font-mono transition-all inline-flex items-center gap-2 shrink-0 shadow-sm"
+            >
+              <span>{locale === 'de' ? 'Alle FAQs anzeigen' : 'View All FAQs'}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

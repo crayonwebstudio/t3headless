@@ -1,0 +1,276 @@
+---
+import { ROUTES, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const routes = ROUTES[locale];
+const isDe = locale === 'de';
+
+const copy = isDe
+  ? {
+      eyebrow: 'DATENSCHUTZ & COOKIE-EINSTELLUNGEN (DSGVO / DSG)',
+      title: 'Wir respektieren Ihre digitale Privatsphäre.',
+      description:
+        'Wir verwenden technisch notwendige Cookies für den Betrieb dieser Seite sowie, nach Ihrer ausdrücklichen Zustimmung, optionale Analyse- und Komfort-Cookies gemäss EU-DSGVO und Schweizer DSG.',
+      privacyLinkLabel: 'Datenschutzerklärung lesen ↗',
+      acceptAll: 'Alle akzeptieren',
+      essentialOnly: 'Nur notwendige',
+      customize: 'Einstellungen',
+      savePreferences: 'Auswahl speichern',
+      categories: [
+        {
+          id: 'necessary',
+          name: 'Technisch notwendig',
+          badge: 'Immer aktiv',
+          desc: 'Erforderlich für Grundfunktionen wie Sprachwahl (EN/DE), Formularschutz und Cookie-Präferenzen.',
+          required: true,
+        },
+        {
+          id: 'analytics',
+          name: 'Analyse & Performance',
+          badge: 'Optional',
+          desc: 'Hilft uns anonymisiert zu verstehen, wie Besucher unsere Dokumentation und Architektur-Seiten nutzen.',
+          required: false,
+        },
+        {
+          id: 'functional',
+          name: 'Externe Integrationen (Cal.com / Karten)',
+          badge: 'Optional',
+          desc: 'Ermöglicht interaktive Terminbuchungs-Widgets und externe Kartenansichten.',
+          required: false,
+        },
+      ],
+    }
+  : {
+      eyebrow: 'PRIVACY & GDPR COOKIE CONSENT',
+      title: 'We respect your digital privacy.',
+      description:
+        'We use strictly necessary cookies to operate this platform and, with your explicit consent, optional analytics and functional cookies in compliance with EU GDPR and Swiss FADP.',
+      privacyLinkLabel: 'Read Privacy Policy ↗',
+      acceptAll: 'Accept All',
+      essentialOnly: 'Reject Non-Essential',
+      customize: 'Preferences',
+      savePreferences: 'Save Preferences',
+      categories: [
+        {
+          id: 'necessary',
+          name: 'Strictly Necessary',
+          badge: 'Always Active',
+          desc: 'Required for core site security, locale routing (EN/DE), and storing your privacy consent state.',
+          required: true,
+        },
+        {
+          id: 'analytics',
+          name: 'Analytics & Telemetry',
+          badge: 'Optional',
+          desc: 'Helps us measure API documentation usage and Core Web Vitals anonymously.',
+          required: false,
+        },
+        {
+          id: 'functional',
+          name: 'External Integrations (Cal.com / Maps)',
+          badge: 'Optional',
+          desc: 'Enables embedded 1:1 consultation scheduling widgets and interactive office maps.',
+          required: false,
+        },
+      ],
+    };
+---
+
+<!-- T3Element-Style Monochrome GDPR Cookie Consent Banner -->
+<aside
+  id="t3-gdpr-banner"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="t3-gdpr-title"
+  class="hidden fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] max-w-[420px] rounded-2xl bg-[#222222] text-white border border-white/15 shadow-2xl overflow-hidden transition-all duration-300"
+>
+  <div class="p-6 sm:p-7 space-y-4">
+    <!-- Header -->
+    <div class="flex items-center justify-between gap-2">
+      <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-[#FEC458] flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-[#F8951E]"></span>
+        <span>{copy.eyebrow}</span>
+      </span>
+      <a
+        href={routes.privacyPolicy}
+        class="font-mono text-[11px] text-[#FFFCEF]/75 hover:text-[#F8951E] transition-colors shrink-0"
+      >
+        {copy.privacyLinkLabel}
+      </a>
+    </div>
+
+    <h3 id="t3-gdpr-title" class="text-lg sm:text-xl font-bold text-[#FFFCEF] tracking-tight">
+      {copy.title}
+    </h3>
+
+    <p class="text-xs sm:text-[13px] text-[#FFFCEF]/78 leading-relaxed">
+      {copy.description}
+    </p>
+
+    <!-- Collapsible Granular Preferences Panel -->
+    <div id="t3-gdpr-prefs-panel" class="hidden pt-3 border-t border-[#FFFCEF]/14 space-y-2.5">
+      {
+        copy.categories.map((cat) => (
+          <label class="flex items-start justify-between gap-3 p-3 rounded-2xl bg-[#FFFCEF]/6 border border-[#FFFCEF]/10 cursor-pointer">
+            <div class="space-y-0.5 pr-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-[#FFFCEF]">{cat.name}</span>
+                <span class="px-2 py-0.5 rounded-full bg-[#FFFCEF]/12 font-mono text-[10px] text-[#FEC458]">
+                  {cat.badge}
+                </span>
+              </div>
+              <p class="text-[11px] text-[#FFFCEF]/65 leading-snug">{cat.desc}</p>
+            </div>
+            <input
+              type="checkbox"
+              data-gdpr-category={cat.id}
+              checked={cat.required}
+              disabled={cat.required}
+              class="mt-1 h-4 w-4 accent-[#F8951E] rounded cursor-pointer disabled:opacity-60"
+            />
+          </label>
+        ))
+      }
+
+      <button
+        type="button"
+        id="t3-gdpr-save-prefs"
+        class="w-full mt-2 py-2.5 px-4 rounded-full bg-[#FFFCEF] text-[#001726] hover:bg-[#FEC458] font-display font-semibold text-xs transition-colors cursor-pointer"
+      >
+        {copy.savePreferences} →
+      </button>
+    </div>
+
+    <!-- Action Pill Buttons -->
+    <div class="pt-2 flex flex-wrap items-center gap-2">
+      <button
+        type="button"
+        id="t3-gdpr-accept-all"
+        class="flex-1 py-2.5 px-4 rounded-full bg-[#F8951E] hover:bg-[#FEC458] text-[#001726] font-display font-bold text-xs transition-colors cursor-pointer whitespace-nowrap"
+      >
+        {copy.acceptAll}
+      </button>
+      <button
+        type="button"
+        id="t3-gdpr-reject"
+        class="flex-1 py-2.5 px-4 rounded-full bg-transparent hover:bg-[#FFFCEF]/10 text-[#FFFCEF] border border-[#FFFCEF]/25 font-display font-semibold text-xs transition-colors cursor-pointer whitespace-nowrap"
+      >
+        {copy.essentialOnly}
+      </button>
+      <button
+        type="button"
+        id="t3-gdpr-toggle-prefs"
+        class="py-2.5 px-3.5 rounded-full bg-transparent hover:bg-[#FFFCEF]/10 text-[#FEC458] border border-[#FEC458]/30 font-mono text-[11px] transition-colors cursor-pointer"
+      >
+        {copy.customize}
+      </button>
+    </div>
+  </div>
+</aside>
+
+<script>
+  const STORAGE_KEY = 't3headless_gdpr_consent_v1';
+
+  interface ConsentState {
+    necessary: boolean;
+    analytics: boolean;
+    functional: boolean;
+    timestamp: string;
+  }
+
+  function initGdprConsent() {
+    const banner = document.getElementById('t3-gdpr-banner');
+    const prefsPanel = document.getElementById('t3-gdpr-prefs-panel');
+    const acceptAllBtn = document.getElementById('t3-gdpr-accept-all');
+    const rejectBtn = document.getElementById('t3-gdpr-reject');
+    const togglePrefsBtn = document.getElementById('t3-gdpr-toggle-prefs');
+    const savePrefsBtn = document.getElementById('t3-gdpr-save-prefs');
+    const reopenButtons = document.querySelectorAll('[data-open-cookie-settings]');
+
+    if (!banner) return;
+
+    const getStoredConsent = (): ConsentState | null => {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? (JSON.parse(raw) as ConsentState) : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const saveConsent = (state: ConsentState) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch {
+        // ignore storage errors in private mode
+      }
+      banner.classList.add('hidden');
+      window.dispatchEvent(new CustomEvent('t3headless:consent-updated', { detail: state }));
+    };
+
+    const syncCheckboxes = (state: ConsentState | null) => {
+      const analyticsBox = banner.querySelector<HTMLInputElement>('[data-gdpr-category="analytics"]');
+      const functionalBox = banner.querySelector<HTMLInputElement>('[data-gdpr-category="functional"]');
+      if (analyticsBox) analyticsBox.checked = Boolean(state?.analytics);
+      if (functionalBox) functionalBox.checked = Boolean(state?.functional);
+    };
+
+    const existing = getStoredConsent();
+    if (!existing) {
+      banner.classList.remove('hidden');
+    } else {
+      syncCheckboxes(existing);
+    }
+
+    if (banner.dataset.bound === 'true') return;
+    banner.dataset.bound = 'true';
+
+    acceptAllBtn?.addEventListener('click', () => {
+      saveConsent({
+        necessary: true,
+        analytics: true,
+        functional: true,
+        timestamp: new Date().toISOString(),
+      });
+    });
+
+    rejectBtn?.addEventListener('click', () => {
+      saveConsent({
+        necessary: true,
+        analytics: false,
+        functional: false,
+        timestamp: new Date().toISOString(),
+      });
+    });
+
+    togglePrefsBtn?.addEventListener('click', () => {
+      prefsPanel?.classList.toggle('hidden');
+    });
+
+    savePrefsBtn?.addEventListener('click', () => {
+      const analyticsBox = banner.querySelector<HTMLInputElement>('[data-gdpr-category="analytics"]');
+      const functionalBox = banner.querySelector<HTMLInputElement>('[data-gdpr-category="functional"]');
+      saveConsent({
+        necessary: true,
+        analytics: Boolean(analyticsBox?.checked),
+        functional: Boolean(functionalBox?.checked),
+        timestamp: new Date().toISOString(),
+      });
+    });
+
+    reopenButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        syncCheckboxes(getStoredConsent());
+        banner.classList.remove('hidden');
+        prefsPanel?.classList.remove('hidden');
+      });
+    });
+  }
+
+  initGdprConsent();
+  document.addEventListener('astro:page-load', initGdprConsent);
+</script>

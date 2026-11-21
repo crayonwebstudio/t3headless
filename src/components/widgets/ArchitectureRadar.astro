@@ -1,0 +1,399 @@
+---
+import { type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const isDe = locale === 'de';
+
+const endpoints = [
+  {
+    id: 'page',
+    pill: '/?type=834',
+    targetId: 'web',
+    latency: '14ms EDGE',
+    status: isDe ? 'Seitenbaum & Navigation aktiv' : 'Page Tree & Routing Active',
+    json: `{
+  "id": 1,
+  "slug": "${isDe ? '/de' : '/'}",
+  "navigation": ["Services", "360 Program", "Docs"],
+  "fluidTemplates": 0,
+  "cache": "HIT (Zurich Edge)"
+}`,
+  },
+  {
+    id: 't3element',
+    pill: '/api/t3element',
+    targetId: 'mobile',
+    latency: '11ms EDGE',
+    status: isDe ? 'T3Element CType-Mapping aktiv' : 'T3Element CType Hydration Active',
+    json: `{
+  "cType": "t3element_hero_block",
+  "component": "<HeroSwissGrid />",
+  "props": { "headline": "API-First TYPO3", "cta": "/contact" },
+  "schemaValidated": true
+}`,
+  },
+  {
+    id: 'ai',
+    pill: '/llms.txt + SEO',
+    targetId: 'ai',
+    latency: '9ms EDGE',
+    status: isDe ? 'JSON-LD & GEO Metadaten aktiv' : 'JSON-LD & GEO Metadata Active',
+    json: `{
+  "meta": { "canonical": "https://www.example.com/", "hreflang": ["en", "de"] },
+  "schema": ["Organization", "FAQPage", "SoftwareApplication"],
+  "aiReady": true
+}`,
+  },
+];
+---
+
+<!-- T3Headless Unique Decoupled Omnichannel Constellation Infographic -->
+<div id="t3-constellation" class="w-full flex flex-col justify-start gap-5">
+  <!-- Top Bar: Eyebrow + Interactive Endpoint Switcher Pills -->
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <span class="eyebrow-label">
+      {isDe ? 'ENTKOPPELTE API TOPOLOGIE' : 'DECOUPLED API TOPOLOGY'}
+    </span>
+
+    <div class="flex items-center gap-1.5" role="tablist">
+      {
+        endpoints.map((ep, idx) => (
+          <button
+            type="button"
+            role="tab"
+            data-ep-id={ep.id}
+            data-ep-target={ep.targetId}
+            data-ep-latency={ep.latency}
+            data-ep-status={ep.status}
+            data-ep-json={ep.json}
+            aria-selected={idx === 0 ? 'true' : 'false'}
+            class:list={[
+              'px-2.5 py-1 rounded-full font-mono text-[0.68rem] border transition-all cursor-pointer',
+              idx === 0
+                ? 'bg-[#222222] text-white border-[#222222] font-semibold'
+                : 'bg-white text-[#4e4e4e] border-[#d9d9d9] hover:border-[#222222]',
+            ]}
+          >
+            {ep.pill}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Main Architectural Dark Constellation Stage -->
+  <div class="rounded-2xl bg-[#222222] text-white p-5 sm:p-6 relative overflow-hidden border border-[#222222]">
+    <!-- Subtle Architectural Dot Matrix -->
+    <div
+      class="pointer-events-none absolute inset-0 opacity-15"
+      style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 16px 16px;"
+    ></div>
+
+    <!-- Top Stage Status Strip -->
+    <div class="relative z-10 flex items-center justify-between gap-2 pb-3 mb-2 border-b border-white/10 font-mono text-[10px] uppercase tracking-widest">
+      <span class="text-white/60 inline-flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#f7931e] pulse-dot"></span>
+        <span id="constellation-status">{endpoints[0].status}</span>
+      </span>
+      <span id="constellation-latency" class="px-2 py-0.5 rounded-full bg-white/10 text-[#f7931e] font-bold">
+        {endpoints[0].latency}
+      </span>
+    </div>
+
+    <!-- Horizontal Air-Gapped Vault -> JSON Bridge -> 3 Omnichannel Targets -->
+    <svg
+      viewBox="0 0 460 190"
+      class="relative z-10 w-full h-auto overflow-visible select-none"
+      role="img"
+      aria-label="Decoupled TYPO3 Core Vault streaming JSON to Web, Mobile, and AI Edge Frontends"
+    >
+      <defs>
+        <linearGradient id="t3Laser" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#f7931e" stop-opacity="0.3" />
+          <stop offset="50%" stop-color="#f7931e" stop-opacity="1" />
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0.95" />
+        </linearGradient>
+      </defs>
+
+      <!-- Left: Air-Gapped TYPO3 Core Vault (Rotating Security Orbit) -->
+      <g>
+        <circle
+          cx="82"
+          cy="95"
+          r="66"
+          fill="rgba(255,255,255,0.03)"
+          stroke="rgba(255,255,255,0.16)"
+          stroke-width="1"
+          stroke-dasharray="4 4"
+          class="animate-orbit"
+          style="transform-origin: 82px 95px;"
+        />
+        <circle
+          cx="82"
+          cy="95"
+          r="50"
+          fill="#181818"
+          stroke="#f7931e"
+          stroke-width="1.5"
+        />
+        <text x="82" y="84" text-anchor="middle" class="font-mono text-[10px] fill-[#f7931e] font-bold tracking-wider">
+          TYPO3 v13/v14
+        </text>
+        <text x="82" y="99" text-anchor="middle" class="font-sans text-[11px] fill-white font-bold">
+          CORE VAULT
+        </text>
+        <text x="82" y="114" text-anchor="middle" class="font-mono text-[8px] fill-white/55">
+          PRIVATE VPC
+        </text>
+      </g>
+
+      <!-- Center: Decoupled REST/JSON API Bridge Conduits -->
+      <path
+        id="bridge-web"
+        d="M 134 95 C 205 95, 220 35, 292 35"
+        fill="none"
+        stroke="rgba(255,255,255,0.18)"
+        stroke-width="1.4"
+      />
+      <path
+        id="bridge-mobile"
+        d="M 134 95 L 292 95"
+        fill="none"
+        stroke="rgba(255,255,255,0.18)"
+        stroke-width="1.4"
+      />
+      <path
+        id="bridge-ai"
+        d="M 134 95 C 205 95, 220 155, 292 155"
+        fill="none"
+        stroke="rgba(255,255,255,0.18)"
+        stroke-width="1.4"
+      />
+
+      <!-- Animated Glowing Laser Streams -->
+      <path
+        d="M 134 95 C 205 95, 220 35, 292 35"
+        fill="none"
+        stroke="url(#t3Laser)"
+        stroke-width="2.2"
+        class="t3-laser-dash"
+      />
+      <path
+        d="M 134 95 L 292 95"
+        fill="none"
+        stroke="url(#t3Laser)"
+        stroke-width="2.2"
+        class="t3-laser-dash delay-1"
+      />
+      <path
+        d="M 134 95 C 205 95, 220 155, 292 155"
+        fill="none"
+        stroke="url(#t3Laser)"
+        stroke-width="2.2"
+        class="t3-laser-dash delay-2"
+      />
+
+      <!-- Travelling JSON Data Packets -->
+      <circle r="3.5" fill="#f7931e">
+        <animateMotion dur="2s" repeatCount="indefinite" path="M 134 95 C 205 95, 220 35, 292 35" />
+      </circle>
+      <circle r="3.5" fill="#ffffff">
+        <animateMotion dur="1.7s" repeatCount="indefinite" path="M 134 95 L 292 95" />
+      </circle>
+      <circle r="3.5" fill="#f7931e">
+        <animateMotion dur="2.3s" repeatCount="indefinite" path="M 134 95 C 205 95, 220 155, 292 155" />
+      </circle>
+
+      <!-- Center Badge Pill on API Bridge -->
+      <rect x="172" y="83" width="76" height="24" rx="12" fill="#f7931e" />
+      <text x="210" y="98" text-anchor="middle" class="font-mono text-[9px] fill-[#222222] font-extrabold">
+        JSON REST
+      </text>
+
+      <!-- Right: 3 Omnichannel Edge Consumer Cards -->
+      <g data-target-card="web" class="cursor-pointer">
+        <rect
+          x="292"
+          y="14"
+          width="160"
+          height="42"
+          rx="10"
+          fill="#2d2d2d"
+          stroke="#f7931e"
+          stroke-width="1.5"
+          class="t3-target-rect transition-all"
+        />
+        <text x="306" y="32" class="font-sans text-[11px] fill-white font-bold">Next.js / React Web</text>
+        <text x="306" y="46" class="font-mono text-[8.5px] fill-[#f7931e]">100/100 CWV • SSR Edge</text>
+      </g>
+
+      <g data-target-card="mobile" class="cursor-pointer">
+        <rect
+          x="292"
+          y="74"
+          width="160"
+          height="42"
+          rx="10"
+          fill="#2a2a2a"
+          stroke="rgba(255,255,255,0.2)"
+          stroke-width="1"
+          class="t3-target-rect transition-all"
+        />
+        <text x="306" y="92" class="font-sans text-[11px] fill-white font-bold">T3Element Mobile / App</text>
+        <text x="306" y="106" class="font-mono text-[8.5px] fill-white/60">1:1 CType JSON Blocks</text>
+      </g>
+
+      <g data-target-card="ai" class="cursor-pointer">
+        <rect
+          x="292"
+          y="134"
+          width="160"
+          height="42"
+          rx="10"
+          fill="#2a2a2a"
+          stroke="rgba(255,255,255,0.2)"
+          stroke-width="1"
+          class="t3-target-rect transition-all"
+        />
+        <text x="306" y="152" class="font-sans text-[11px] fill-white font-bold">Search &amp; AI Agents</text>
+        <text x="306" y="166" class="font-mono text-[8.5px] fill-white/60">JSON-LD • /llms.txt Ready</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Bottom: Live JSON Payload Inspector Strip -->
+  <div class="rounded-2xl border border-[#222222]/12 bg-[#f7f7f7] p-4 space-y-3">
+    <div class="flex items-center justify-between font-mono text-[11px] text-[#4e4e4e]">
+      <span class="font-semibold text-[#222222]">LIVE PAYLOAD PREVIEW</span>
+      <span>0 FLUID TEMPLATES • 99.99% CACHE HIT</span>
+    </div>
+    <pre
+      id="constellation-json-code"
+      class="font-mono text-[11px] sm:text-xs leading-relaxed text-[#222222] bg-white p-3.5 rounded-xl border border-[#222222]/10 overflow-x-auto"
+    ><code>{endpoints[0].json}</code></pre>
+  </div>
+</div>
+
+<style>
+  @keyframes laserFlow {
+    from {
+      stroke-dashoffset: 140;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .t3-laser-dash {
+    stroke-dasharray: 12 12;
+    animation: laserFlow 2.2s linear infinite;
+  }
+
+  .t3-laser-dash.delay-1 {
+    animation-duration: 1.8s;
+    animation-delay: -0.6s;
+  }
+
+  .t3-laser-dash.delay-2 {
+    animation-duration: 2.5s;
+    animation-delay: -1.1s;
+  }
+</style>
+
+<script>
+  function initConstellation() {
+    const root = document.getElementById('t3-constellation');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-ep-id]'));
+    const targetCards = Array.from(root.querySelectorAll<SVGGElement>('[data-target-card]'));
+    const statusEl = document.getElementById('constellation-status');
+    const latencyEl = document.getElementById('constellation-latency');
+    const jsonEl = document.getElementById('constellation-json-code')?.querySelector('code');
+
+    let idx = 0;
+    let paused = false;
+
+    const activate = (targetIdx: number) => {
+      idx = targetIdx;
+      const current = tabs[targetIdx];
+      if (!current) return;
+
+      const targetKey = current.dataset.epTarget;
+
+      tabs.forEach((t, i) => {
+        const active = i === targetIdx;
+        t.setAttribute('aria-selected', String(active));
+        t.classList.toggle('bg-[#222222]', active);
+        t.classList.toggle('text-white', active);
+        t.classList.toggle('border-[#222222]', active);
+        t.classList.toggle('font-semibold', active);
+        t.classList.toggle('bg-white', !active);
+        t.classList.toggle('text-[#4e4e4e]', !active);
+        t.classList.toggle('border-[#d9d9d9]', !active);
+      });
+
+      targetCards.forEach((card) => {
+        const rect = card.querySelector('.t3-target-rect');
+        if (!rect) return;
+        const isTarget = card.dataset.targetCard === targetKey;
+        rect.setAttribute('stroke', isTarget ? '#f7931e' : 'rgba(255,255,255,0.2)');
+        rect.setAttribute('stroke-width', isTarget ? '1.6' : '1');
+        rect.setAttribute('fill', isTarget ? '#2d2d2d' : '#262626');
+      });
+
+      if (statusEl) statusEl.textContent = current.dataset.epStatus || '';
+      if (latencyEl) latencyEl.textContent = current.dataset.epLatency || '';
+      if (jsonEl) jsonEl.textContent = current.dataset.epJson || '';
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        paused = true;
+        activate(i);
+      });
+    });
+
+    targetCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        paused = true;
+        const matchIdx = tabs.findIndex((t) => t.dataset.epTarget === card.dataset.targetCard);
+        if (matchIdx >= 0) activate(matchIdx);
+      });
+    });
+
+    setInterval(() => {
+      if (paused || !document.body.contains(root)) return;
+      activate((idx + 1) % tabs.length);
+    }, 3200);
+  }
+
+  initConstellation();
+  document.addEventListener('astro:page-load', initConstellation);
+</script>
+
+<style>
+  [data-ep-target] {
+    transition: all 0.2s ease;
+  }
+  [data-ep-target]:hover {
+    background-color: #f7f7f7;
+    color: #222222;
+    border-color: #222222;
+  }
+  [data-ep-target][aria-selected="true"] {
+    background-color: #222222 !important;
+    color: #ffffff !important;
+    border-color: #222222 !important;
+  }
+  [data-ep-target][aria-selected="true"]:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+  }
+</style>

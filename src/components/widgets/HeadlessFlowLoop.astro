@@ -1,0 +1,140 @@
+---
+import { SITE_CONTENT, ROUTES, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const thesis = SITE_CONTENT[locale].thesis;
+const routes = ROUTES[locale];
+const isDe = locale === 'de';
+
+const stages = [
+  {
+    num: '01',
+    phase: isDe ? 'MODELLIEREN' : 'MODEL',
+    title: 'TYPO3 + T3Element',
+    metric: '0 Fluid Templates',
+    detail: isDe
+      ? 'Redakteure pflegen Inhalte im gewohnten Seitenbaum; T3Element definiert typisierte Blöcke.'
+      : 'Editors manage content in the native page tree while T3Element models typed blocks.',
+  },
+  {
+    num: '02',
+    phase: isDe ? 'AUSLIEFERN' : 'DELIVER',
+    title: 'EXT:t3headless JSON API',
+    metric: '< 18ms Edge TTFB',
+    detail: isDe
+      ? 'Strukturierte REST-JSON-Antworten (?type=834) inklusive Navigation, FAL-Medien & SEO.'
+      : 'Structured REST JSON (?type=834) with resolved slugs, navigation, FAL media & SEO meta.',
+  },
+  {
+    num: '03',
+    phase: isDe ? 'RENDERN' : 'RENDER',
+    title: 'Next.js / React / Mobile',
+    metric: '100 / 100 CWV',
+    detail: isDe
+      ? 'Komponenten-Hydration am Edge-CDN für sofortige Seitenwechsel und maximale Sicherheit.'
+      : 'Edge-hydrated UI components delivering instant page transitions and zero CMS exposure.',
+  },
+];
+---
+
+<!-- T3Headless Unique Horizontal Request Lifecycle Rail ("Model. Deliver. Render.") -->
+<section class="w-full hairline-t hairline-b bg-[#f7f7f7] py-20 lg:py-28">
+  <div class="swiss-container space-y-12">
+    <!-- Top Split Header -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end" data-uxis-reveal>
+      <div class="lg:col-span-7 space-y-4">
+        <span class="eyebrow-label">{thesis.eyebrow}</span>
+        <h2 class="display-section text-[#222222]">{thesis.heading}</h2>
+        <p class="text-base sm:text-lg text-[#4e4e4e] max-w-2xl leading-relaxed">
+          {thesis.body}
+        </p>
+      </div>
+      <div class="lg:col-span-5 lg:text-right">
+        <a href={routes.document} class="uxis-cta-outline group">
+          <span>{thesis.cta}</span>
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Animated Horizontal 3-Stage Pulse Rail (Distinct from T3Element's 3-Circle Venn) -->
+    <div class="relative" data-uxis-reveal>
+      <!-- Connecting Animated Pulse Track (Desktop) -->
+      <div class="hidden lg:block absolute top-11 left-[12%] right-[12%] h-[2px] bg-[#222222]/12 overflow-hidden z-0">
+        <div class="h-full w-1/3 bg-gradient-to-r from-transparent via-[#f7931e] to-transparent t3-rail-pulse"></div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
+        {
+          stages.map((stage, idx) => (
+            <div
+              class:list={[
+                'rounded-2xl p-7 sm:p-8 border transition-all duration-300 flex flex-col justify-between gap-6',
+                idx === 1
+                  ? 'bg-[#222222] text-white border-[#222222]'
+                  : 'bg-white text-[#222222] border-[#222222]/12 hover:border-[#222222]/35',
+              ]}
+            >
+              <div class="space-y-4">
+                <div class="flex items-center justify-between gap-2">
+                  <span
+                    class:list={[
+                      'w-10 h-10 rounded-full font-mono text-xs font-bold inline-flex items-center justify-center border',
+                      idx === 1
+                        ? 'bg-[#f7931e] text-[#222222] border-[#f7931e]'
+                        : 'bg-[#f7f7f7] text-[#222222] border-[#222222]/15',
+                    ]}
+                  >
+                    {stage.num}
+                  </span>
+                  <span
+                    class:list={[
+                      'font-mono text-[11px] uppercase tracking-widest font-semibold',
+                      idx === 1 ? 'text-[#f7931e]' : 'text-[#8c8c8c]',
+                    ]}
+                  >
+                    {stage.phase}
+                  </span>
+                </div>
+
+                <h3 class="text-2xl font-bold tracking-tight">{stage.title}</h3>
+                <p class="text-sm leading-relaxed opacity-80">{stage.detail}</p>
+              </div>
+
+              <div class="pt-4 border-t border-current/12 flex items-center justify-between font-mono text-xs">
+                <span class="opacity-65">RUNTIME BENCHMARK</span>
+                <span
+                  class:list={[
+                    'px-3 py-1 rounded-full font-semibold',
+                    idx === 1 ? 'bg-white/12 text-[#f7931e]' : 'bg-[#f7f7f7] text-[#222222] border border-[#d9d9d9]',
+                  ]}
+                >
+                  {stage.metric}
+                </span>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes railSweep {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(320%);
+    }
+  }
+
+  .t3-rail-pulse {
+    animation: railSweep 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+</style>

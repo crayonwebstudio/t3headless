@@ -1,0 +1,219 @@
+---
+import { SITE_CONTENT, ROUTES, T3ELEMENT_LINKS, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const content = SITE_CONTENT[locale];
+const routes = ROUTES[locale];
+---
+
+<!-- T3Element Light Monochrome Swiss Editorial Footer -->
+<footer class="bg-white text-[#222222] border-t border-[#222222]/12 pb-28 relative overflow-hidden">
+  <div class="swiss-container">
+    <!-- Oversized Hero Footer CTA ("Let's talk" + Circular Arrow Badge) -->
+    <div class="py-16 sm:py-24 lg:py-28 border-b border-[#222222]/12 flex flex-col items-start gap-5">
+      <span class="eyebrow-label">{content.footer.eyebrow}</span>
+      <a
+        href={routes.contact}
+        class="group inline-flex items-center gap-5 sm:gap-8 focus:outline-none"
+      >
+        <span class="display-giant text-[#222222] group-hover:text-[#4e4e4e] transition-colors">
+          {content.footer.giantCta}
+        </span>
+        <span
+          aria-hidden="true"
+          class="w-12 h-12 sm:w-18 sm:h-18 rounded-full border border-[#222222] inline-flex items-center justify-center text-xl sm:text-3xl group-hover:bg-[#222222] group-hover:text-white group-hover:translate-x-2 transition-all"
+        >
+          →
+        </span>
+      </a>
+      <p class="text-base sm:text-lg text-[#4e4e4e] max-w-2xl">
+        {content.footer.bannerSubtitle}
+      </p>
+    </div>
+
+    <!-- Clean 4-Column Architectural Metadata Grid -->
+    <div class="py-14 sm:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 border-b border-[#222222]/12">
+      <!-- Col 1: Brand + Switzerland HQ -->
+      <div class="lg:col-span-4 space-y-4">
+        <a href={routes.home} class="inline-flex items-center">
+          <img
+            src="/images/logo/t3headless-color.png"
+            alt="t3headless"
+            width="160"
+            height="40"
+            class="h-7 sm:h-8 w-auto object-contain"
+          />
+        </a>
+        <p class="text-sm text-[#4e4e4e] leading-relaxed max-w-sm">
+          {content.meta.description}
+        </p>
+        <div class="pt-1 space-y-1 text-xs font-mono text-[#4e4e4e]">
+          <p class="text-[#222222] font-semibold">SWISS HEADQUARTERS</p>
+          <p>{content.meta.address}</p>
+        </div>
+      </div>
+
+      <!-- Col 2: Platform -->
+      <div class="lg:col-span-2 space-y-3">
+        <p class="eyebrow-label">Platform</p>
+        <ul class="space-y-2.5 text-sm text-[#222222]">
+          <li><a href={routes.home} class="uxis-underline">{content.nav.home}</a></li>
+          <li><a href={routes.builtWith} class="uxis-underline">{content.nav.builtWith}</a></li>
+          <li><a href={routes.document} class="uxis-underline">{content.nav.document}</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Support & Legal -->
+      <div class="lg:col-span-2 space-y-3">
+        <p class="eyebrow-label">Resources</p>
+        <ul class="space-y-2.5 text-sm text-[#222222]">
+          <li><a href={routes.faq} class="uxis-underline">{content.nav.faq}</a></li>
+          <li><a href={routes.supportTicket} class="uxis-underline">{content.nav.support}</a></li>
+          <li><a href={routes.contact} class="uxis-underline">{content.nav.contactCta}</a></li>
+          <li><a href={routes.privacyPolicy} class="uxis-underline">Privacy Policy</a></li>
+          <li>
+            <a href={T3ELEMENT_LINKS.siteUrl} target="_blank" rel="noopener noreferrer" class="uxis-underline inline-flex items-center gap-1">
+              <span>T3Element Website</span>
+              <span>↗</span>
+            </a>
+          </li>
+          <li>
+            <a href={T3ELEMENT_LINKS.appRegisterUrl} target="_blank" rel="noopener noreferrer" class="uxis-underline inline-flex items-center gap-1">
+              <span>T3Element Builder</span>
+              <span>↗</span>
+            </a>
+          </li>
+          <li>
+            <a href={T3ELEMENT_LINKS.terUrl} target="_blank" rel="noopener noreferrer" class="uxis-underline inline-flex items-center gap-1">
+              <span>TYPO3 TER</span>
+              <span>↗</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Newsletter -->
+      <div class="lg:col-span-4 space-y-4">
+        <p class="eyebrow-label">{content.footer.newsletterLabel}</p>
+        <form
+          id="footer-newsletter-form"
+          class="space-y-3"
+          data-locale={locale}
+        >
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder={content.footer.newsletterPlaceholder}
+            class="uxis-input"
+            aria-label="Newsletter email"
+          />
+          <button
+            id="footer-newsletter-btn"
+            type="submit"
+            class="uxis-cta-outline !py-2.5 !px-5 !text-xs disabled:opacity-60"
+          >
+            <span id="footer-newsletter-label">{content.footer.newsletterButton}</span>
+            <span>→</span>
+          </button>
+          <p id="footer-newsletter-msg" class="hidden text-xs font-mono text-[#222222]"></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Trademark & Non-Official Notice -->
+    <div class="pt-6 text-xs text-[#4e4e4e] space-y-0.5">
+      <p>TYPO3 is a trademark of the TYPO3 Association.</p>
+      <p>t3element and t3headless is solution extension for TYPO3 CMS and is not an official TYPO3 Association product.</p>
+    </div>
+
+    <!-- Bottom Legal & GDPR Strip -->
+    <div class="pt-7 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#4e4e4e] font-mono">
+      <p class="inline-flex flex-wrap items-center gap-1.5">
+        <span>{content.footer.copyright}</span>
+        <span>Made in India with</span>
+        <svg class="w-3.5 h-3.5 text-[#f7931e] inline-block shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-label="love">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+      </p>
+      <div class="flex flex-wrap items-center gap-6">
+        <a href={`mailto:${content.meta.email}`} class="uxis-underline text-[#222222]">
+          {content.meta.email}
+        </a>
+        <button
+          type="button"
+          data-open-cookie-settings
+          class="hover:text-[#f7931e] transition-colors cursor-pointer"
+        >
+          {locale === 'de' ? 'Cookie-Einstellungen (DSGVO)' : 'Cookie Settings (GDPR)'}
+        </button>
+        <button
+          type="button"
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+          class="hover:text-[#222222] transition-colors cursor-pointer"
+        >
+          Back to top ↑
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  import { subscribeNewsletter } from '../../lib/crm';
+
+  function initNewsletterForm() {
+    const form = document.getElementById('footer-newsletter-form') as HTMLFormElement | null;
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+
+    const msgEl = document.getElementById('footer-newsletter-msg');
+    const btn = document.getElementById('footer-newsletter-btn') as HTMLButtonElement | null;
+    const labelEl = document.getElementById('footer-newsletter-label');
+    const isDe = form.dataset.locale === 'de';
+    const defaultLabel = labelEl?.textContent || (isDe ? 'Abonnieren' : 'Subscribe');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!msgEl) return;
+      msgEl.classList.add('hidden');
+      msgEl.classList.remove('text-red-600');
+      msgEl.classList.add('text-[#222222]');
+
+      const fd = new FormData(form);
+      const email = String(fd.get('email') || '');
+      if (btn) btn.disabled = true;
+      if (labelEl) labelEl.textContent = isDe ? 'Wird gesendet…' : 'Subscribing…';
+
+      const result = await subscribeNewsletter(email);
+
+      if (btn) btn.disabled = false;
+      if (labelEl) labelEl.textContent = defaultLabel;
+
+      if (result.ok) {
+        if (result.status === 'already_subscribed') {
+          msgEl.textContent = isDe
+            ? '✓ Diese E-Mail-Adresse ist bereits angemeldet.'
+            : '✓ You are already subscribed to T3Headless updates.';
+        } else {
+          msgEl.textContent = isDe
+            ? '✓ Erfolgreich für T3Headless Architektur-Updates angemeldet.'
+            : '✓ Subscribed to T3Headless release notes & architecture updates.';
+          form.reset();
+        }
+        msgEl.classList.remove('hidden');
+      } else {
+        msgEl.textContent = `✕ ${result.error || (isDe ? 'Anmeldung fehlgeschlagen.' : 'Subscription failed. Please try again.')}`;
+        msgEl.classList.remove('text-[#222222]', 'hidden');
+        msgEl.classList.add('text-red-600');
+      }
+    });
+  }
+
+  initNewsletterForm();
+  document.addEventListener('astro:page-load', initNewsletterForm);
+</script>

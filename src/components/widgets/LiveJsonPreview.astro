@@ -1,0 +1,139 @@
+---
+import { SAMPLE_JSON_PAYLOADS } from '../../lib/typo3';
+---
+
+<div class="rounded-2xl border border-[#222222]/12 bg-white overflow-hidden">
+  <!-- Top Bar: Tab Selector Pills (T3Element Showcase Tab Bar style) -->
+  <div class="p-4 sm:p-5 bg-[#f7f7f7] border-b border-[#222222]/12 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-[#f7931e]"></span>
+      <span class="font-mono text-xs font-semibold uppercase tracking-wider text-[#222222]">
+        Interactive Headless TYPO3 → Component Inspector
+      </span>
+    </div>
+
+    <div class="flex flex-wrap gap-2" role="tablist">
+      {
+        SAMPLE_JSON_PAYLOADS.map((item, idx) => (
+          <button
+            type="button"
+            role="tab"
+            data-json-tab={item.id}
+            aria-selected={idx === 0 ? 'true' : 'false'}
+            class:list={[
+              'px-3.5 py-1.5 rounded-full text-xs font-mono transition-all cursor-pointer border',
+              idx === 0
+                ? 'bg-[#222222] text-white border-[#222222]'
+                : 'bg-white text-[#222222] border-[#d9d9d9] hover:border-[#222222]',
+            ]}
+          >
+            {item.label}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Split Content Panels -->
+  {
+    SAMPLE_JSON_PAYLOADS.map((item, idx) => (
+      <div
+        data-json-panel={item.id}
+        class:list={[
+          'grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#222222]/12',
+          idx === 0 ? '' : 'hidden',
+        ]}
+      >
+        <!-- Left: Live JSON Payload -->
+        <div class="lg:col-span-7 bg-[#222222] text-white p-6 sm:p-8 flex flex-col justify-between">
+          <div class="flex items-center justify-between gap-2 pb-4 mb-4 border-b border-white/12 text-xs font-mono">
+            <span class="text-[#f7931e] truncate">{item.route}</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-white/10 text-white shrink-0">
+              200 OK • JSON
+            </span>
+          </div>
+          <pre class="font-mono text-xs sm:text-[13px] leading-relaxed text-white/90 overflow-x-auto"><code>{item.json}</code></pre>
+        </div>
+
+        <!-- Right: Hydrated Frontend Component Mapping -->
+        <div class="lg:col-span-5 p-6 sm:p-8 bg-white flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs uppercase tracking-wider text-[#4e4e4e]">
+                Hydrated UI Component
+              </span>
+              <span class="px-3 py-1 rounded-full bg-[#f7f7f7] border border-[#d9d9d9] font-mono text-xs font-semibold text-[#222222]">
+                {item.componentName}
+              </span>
+            </div>
+
+            <div class="p-6 rounded-xl bg-[#f7f7f7] border border-[#222222]/12 space-y-3">
+              <span class="eyebrow-label">LIVE PREVIEW</span>
+              <h4 class="text-xl font-bold text-[#222222]">{item.previewTitle}</h4>
+              <p class="text-sm text-[#4e4e4e] leading-relaxed">{item.previewSummary}</p>
+            </div>
+          </div>
+
+          <div class="space-y-3 pt-4 border-t border-[#222222]/12">
+            <p class="font-mono text-[11px] uppercase tracking-wider text-[#4e4e4e]">
+              T3Element Runtime Guarantees
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {item.previewMetrics.map((metric) => (
+                <span class="uxis-pill text-xs font-mono">{metric}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  function initJsonInspector() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('[data-json-tab]');
+    const panels = document.querySelectorAll<HTMLElement>('[data-json-panel]');
+    if (!tabs.length) return;
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const targetId = tab.dataset.jsonTab;
+        tabs.forEach((t) => {
+          const isTarget = t.dataset.jsonTab === targetId;
+          t.setAttribute('aria-selected', String(isTarget));
+          t.classList.toggle('bg-[#222222]', isTarget);
+          t.classList.toggle('text-white', isTarget);
+          t.classList.toggle('border-[#222222]', isTarget);
+          t.classList.toggle('bg-white', !isTarget);
+          t.classList.toggle('text-[#222222]', !isTarget);
+        });
+        panels.forEach((panel) => {
+          panel.classList.toggle('hidden', panel.dataset.jsonPanel !== targetId);
+        });
+      });
+    });
+  }
+  initJsonInspector();
+  document.addEventListener('astro:page-load', initJsonInspector);
+</script>
+
+<style>
+  [data-json-tab] {
+    transition: all 0.2s ease;
+  }
+  [data-json-tab]:hover {
+    background-color: #f7f7f7;
+    border-color: #222222;
+  }
+  [data-json-tab][aria-selected="true"] {
+    background-color: #222222 !important;
+    color: #ffffff !important;
+    border-color: #222222 !important;
+  }
+  [data-json-tab][aria-selected="true"]:hover {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+  }
+</style>

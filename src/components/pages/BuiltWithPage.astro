@@ -1,0 +1,520 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LiveJsonPreview from '../widgets/LiveJsonPreview.astro';
+import HeadlessFlowLoop from '../widgets/HeadlessFlowLoop.astro';
+import { SITE_CONTENT, ROUTES, T3ELEMENT_LINKS, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'en' } = Astro.props;
+const content = SITE_CONTENT[locale];
+const routes = ROUTES[locale];
+const isDe = locale === 'de';
+
+const pillars = isDe
+  ? [
+      {
+        num: '01',
+        title: 'Null Fluid-Template-Overhead',
+        summary:
+          'Überspringen Sie komplexe Fluid-Layouts, Partials und ViewHelper. T3Element serialisiert Ihre Backend-Felder direkt in sauberes, strukturiertes JSON.',
+        tags: ['Kein Fluid nötig', 'Direktes JSON', 'Schnelles Onboarding'],
+      },
+      {
+        num: '02',
+        title: 'Deklaratives Content-zu-Komponenten Mapping',
+        summary:
+          'Jedes in T3Element definierte Inhaltselement korrespondiert 1:1 mit einer React-, Next.js- oder Svelte-Komponente im Frontend.',
+        tags: ['1:1 CType Registry', 'TypeScript Props', 'Modularer Aufbau'],
+      },
+      {
+        num: '03',
+        title: 'Vertraute TYPO3-Redaktionserfahrung',
+        summary:
+          'Redakteure arbeiten weiterhin mit dem gewohnten TYPO3-Seitenbaum, Formularen, Medien-Management (FAL) und Berechtigungen.',
+        tags: ['Nativer Seitenbaum', 'FAL-Medien', 'Workspaces'],
+      },
+      {
+        num: '04',
+        title: 'Nahtlose EXT:t3headless Integration',
+        summary:
+          'Baut direkt auf unserer offiziellen TER-Extension `EXT:t3headless` auf, ohne proprietären Lock-in.',
+        tags: ['EXT:t3headless', 'TYPO3 TER', 'Offene Standards'],
+      },
+      {
+        num: '05',
+        title: 'Gebaut für Enterprise-Geschwindigkeit',
+        summary:
+          'Reduzieren Sie die Entwicklungszeit für neue Content-Blöcke um über 70% bei voller Typsicherheit und Edge-Caching.',
+        tags: ['4,2× schneller', 'Edge-Ready', 'TYPO3 v13 & v14'],
+      },
+    ]
+  : [
+      {
+        num: '01',
+        title: 'Zero Fluid Template Overhead',
+        summary:
+          'Skip complex Fluid layouts, partials, and ViewHelpers. T3Element serializes your TYPO3 backend fields directly into clean, structured JSON.',
+        tags: ['No Fluid Required', 'Direct JSON Output', 'Rapid Onboarding'],
+      },
+      {
+        num: '02',
+        title: 'Declarative Content-to-Component Mapping',
+        summary:
+          'Every content element created in T3Element maps 1:1 to a React, Next.js, or Svelte UI component in your frontend codebase.',
+        tags: ['1:1 CType Registry', 'TypeScript Props', 'Modular Blocks'],
+      },
+      {
+        num: '03',
+        title: 'Familiar TYPO3 Editorial Experience',
+        summary:
+          'Editors keep the hierarchical TYPO3 page tree, drag-and-drop content columns, FAL digital asset management, and granular permissions.',
+        tags: ['Native Page Tree', 'FAL Media Assets', 'Workspaces'],
+      },
+      {
+        num: '04',
+        title: 'Seamless EXT:t3headless Integration',
+        summary:
+          'Engineered directly on our official TYPO3 TER extension `EXT:t3headless` with zero vendor lock-in.',
+        tags: ['EXT:t3headless', 'TYPO3 TER', 'Open Standards'],
+      },
+      {
+        num: '05',
+        title: 'Engineered for Enterprise Velocity',
+        summary:
+          'Cut custom content block development time by over 70% while guaranteeing compile-time schema safety and sub-20ms edge responses.',
+        tags: ['4.2× Faster Delivery', 'Edge-Ready', 'TYPO3 v13 & v14'],
+      },
+    ];
+---
+
+<BaseLayout
+  locale={locale}
+  title={isDe ? 'Erstellt mit 🧡: Wie T3Element T3Headless antreibt' : 'Built With 🧡: How T3Element Powers T3Headless'}
+  description={
+    isDe
+      ? 'Erfahren Sie, wie T3Element eigene TYPO3 Content-Elemente ohne Fluid-Templates direkt in strukturiertes JSON für React und Next.js serialisiert.'
+      : 'Discover how T3Element serializes custom TYPO3 content elements directly into structured JSON for React and Next.js with zero Fluid template overhead.'
+  }
+  breadcrumbLabel={isDe ? 'Erstellt mit T3Element' : 'Built With T3Element'}
+>
+  <!-- Hero Section (UXIS /services & /about style) -->
+  <section class="w-full hairline-b bg-[#ffffff] py-16 sm:py-24">
+    <div class="swiss-container">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
+        <div class="lg:col-span-8 space-y-6">
+          <div class="flex flex-wrap items-center gap-4">
+            <img src="/images/logo/t3element-horizontal.png" alt="t3element" class="h-7 w-auto object-contain" />
+            <span class="eyebrow-label">
+              {isDe ? 'BUILT WITH 🧡 FÜR TYPO3-LIEBHABER' : 'BUILT WITH 🧡 FOR TYPO3 LOVERS'}
+            </span>
+          </div>
+          <h1 class="display-hero text-[#222222]">
+            {
+              isDe
+                ? 'Wie T3Element die nächste Generation von T3Headless antreibt.'
+                : 'How T3Element powers the next generation of T3Headless.'
+            }
+          </h1>
+          <p class="text-lg sm:text-xl text-[#4e4e4e] max-w-3xl leading-relaxed">
+            {
+              isDe
+                ? 'Was ist T3Element? T3Element ist unsere spezialisierte TYPO3-Engine, mit der Entwickler modulare Content-Elemente erstellen und direkt als strukturiertes JSON an moderne Frontend-Komponenten übergeben, ganz ohne Fluid-Templates.'
+                : 'What is T3Element? T3Element is our specialized TYPO3 content block engine that lets developers define custom content elements and output structured JSON directly to modern frontend components, with zero Fluid templates.'
+            }
+          </p>
+        </div>
+
+        <div class="lg:col-span-4 flex lg:justify-end gap-3">
+          <a href="#t3element-pillars" class="uxis-cta-outline">
+            <span>{isDe ? 'Entdecken ↓' : 'Explore ↓'}</span>
+          </a>
+          <a href={routes.contact} class="uxis-cta-btn">
+            <span>{isDe ? 'Demo anfordern' : 'Request Live Demo'}</span>
+            <span>↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 Core Pillars of T3Element (UXIS Asymmetric Hairline Grid) -->
+  <section id="t3element-pillars" class="w-full hairline-b bg-[#f7f7f7] py-20 lg:py-28">
+    <div class="swiss-container space-y-14">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+        <div class="lg:col-span-5">
+          <span class="eyebrow-label">T3ELEMENT ARCHITECTURE</span>
+          <h2 class="display-section mt-3 text-[#222222]">
+            {isDe ? 'Warum T3Element alles verändert.' : 'Why T3Element changes everything.'}
+          </h2>
+        </div>
+        <p class="lg:col-span-7 text-base sm:text-lg text-[#4e4e4e]">
+          {
+            isDe
+              ? 'Klassisches TYPO3 erfordert TCA, TypoScript und Fluid-Templates für jedes neue Element. T3Element vereint Definition und JSON-Serialisierung in einem schlanken Workflow.'
+              : 'Traditional TYPO3 requires wiring TCA, TypoScript, and Fluid templates for every new block. T3Element unifies block definition and JSON serialization into one streamlined workflow.'
+          }
+        </p>
+      </div>
+
+      <div class="border-t border-[#222222]/14 divide-y divide-[#222222]/14">
+        {
+          pillars.map((p) => (
+            <div class="py-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start hover:bg-white/60 px-4 transition-colors">
+              <div class="lg:col-span-1 font-mono text-sm font-bold text-[#f7931e]">
+                {p.num}
+              </div>
+              <div class="lg:col-span-4">
+                <h3 class="text-2xl font-bold text-[#222222]">{p.title}</h3>
+              </div>
+              <div class="lg:col-span-4 text-sm sm:text-base text-[#4e4e4e] leading-relaxed">
+                {p.summary}
+              </div>
+              <div class="lg:col-span-3 flex flex-wrap gap-2">
+                {p.tags.map((tag, idx) => (
+                  <span class:list={['uxis-pill text-xs font-mono', idx === 0 ? 'uxis-pill-orange' : '']}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: CORE ARCHITECTURE & DELIVERABLES -->
+  <section class="w-full hairline-b bg-white py-20 lg:py-28">
+    <div class="swiss-container space-y-12">
+      <!-- Top Intro Header -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-16 border-b border-[#222222]/12" data-uxis-reveal>
+        <div class="lg:col-span-4">
+          <span class="eyebrow-label">{content.capabilities.eyebrow}</span>
+        </div>
+        <div class="lg:col-span-8 space-y-4">
+          <h2 class="display-section text-[#222222]">
+            {content.capabilities.heading}
+          </h2>
+          <p class="text-base sm:text-lg text-[#4e4e4e] leading-relaxed max-w-3xl">
+            {content.capabilities.description}
+          </p>
+        </div>
+      </div>
+
+      <!-- 2-Column UXIS Split: Left Pill Clusters | Right Numbered Pipeline -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#222222]/12">
+        <!-- Left Column: Outlined Pill Clusters -->
+        <div class="lg:col-span-6 py-12 lg:pr-12 space-y-10">
+          {
+            content.capabilities.clusters.map((cluster, idx) => (
+              <div class="space-y-4 pb-8 border-b border-[#222222]/12 last:border-b-0 last:pb-0" data-uxis-reveal>
+                <div class="flex items-center justify-between">
+                  <h3 class="font-mono text-sm font-bold tracking-wider uppercase text-[#222222]">
+                    {cluster.category}
+                  </h3>
+                  <span class="font-mono text-xs text-[#f7931e] font-semibold">0{idx + 1}</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  {cluster.tags.map((tag, tagIdx) => (
+                    <span class:list={['uxis-pill', tagIdx === 0 ? 'uxis-pill-orange' : '']}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- Right Column: 5-Stage Headless Engineering Pipeline -->
+        <div class="lg:col-span-6 py-12 lg:pl-12 divide-y divide-[#222222]/12">
+          {
+            content.capabilities.pipeline.map((item) => (
+              <div class="py-6 first:pt-0 last:pb-0 flex items-start gap-5 group" data-uxis-reveal>
+                <span class="w-11 h-11 rounded-full bg-[#f7f7f7] border border-[#222222]/14 group-hover:bg-[#222222] group-hover:text-white text-[#222222] font-mono text-xs font-bold inline-flex items-center justify-center shrink-0 transition-colors">
+                  {item.step}
+                </span>
+                <div class="space-y-1.5">
+                  <h4 class="text-xl font-bold text-[#222222]">
+                    {item.title}
+                  </h4>
+                  <p class="text-sm sm:text-base text-[#4e4e4e] leading-relaxed">
+                    {item.summary}
+                  </p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Interactive Live JSON API -> Component Inspector -->
+      <div class="pt-8" data-uxis-reveal>
+        <LiveJsonPreview />
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: OUR ENGINEERING APPROACH ("Model. Deliver. Render.") -->
+  <HeadlessFlowLoop locale={locale} />
+
+  <!-- SECTION: KEY FEATURES OF TYPO3 HEADLESS SOLUTION -->
+  <section class="w-full hairline-b bg-white py-20 lg:py-28">
+    <div class="swiss-container space-y-14">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end" data-uxis-reveal>
+        <div class="lg:col-span-5">
+          <span class="eyebrow-label">{content.features.eyebrow}</span>
+          <h2 class="display-section mt-3 text-[#222222]">{content.features.heading}</h2>
+        </div>
+        <div class="lg:col-span-7 lg:text-right">
+          <a href={routes.document} class="uxis-cta-outline">
+            <span>{isDe ? 'Erweiterungsdokumentation ansehen' : 'Explore extension documentation'}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 4x2 Swiss Architectural Hairline Matrix -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-l border-[#222222]/12 bg-white">
+        {
+          content.features.items.map((feat) => (
+            <article
+              class="p-7 sm:p-8 border-r border-b border-[#222222]/12 flex flex-col justify-between hover:bg-[#f7f7f7] transition-colors group"
+              data-uxis-reveal
+            >
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-[#f7931e]">{feat.code}</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#222222]/20 group-hover:bg-[#f7931e] transition-colors"></span>
+                </div>
+                <h3 class="text-xl font-bold text-[#222222] leading-snug">
+                  {feat.title}
+                </h3>
+                <p class="text-sm text-[#4e4e4e] leading-relaxed">
+                  {feat.description}
+                </p>
+              </div>
+
+              <div class="pt-6 mt-6 border-t border-[#222222]/10 flex flex-wrap gap-1.5">
+                {feat.deliverables.map((del) => (
+                  <span class="px-2.5 py-1 rounded-full bg-white border border-[#d9d9d9] text-[11px] font-mono text-[#222222]">
+                    {del}
+                  </span>
+                ))}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: VALUE FOR ENTERPRISE TEAMS -->
+  <section class="w-full hairline-b bg-[#f7f7f7] py-20 lg:py-28">
+    <div class="swiss-container space-y-16">
+      <div class="space-y-3" data-uxis-reveal>
+        <span class="eyebrow-label">{content.benchmarks.eyebrow}</span>
+        <h2 class="display-section text-[#222222]">{content.benchmarks.heading}</h2>
+      </div>
+
+      <!-- Numbered Impact Rows -->
+      <div class="border-t border-[#222222]/12 divide-y divide-[#222222]/12 bg-white rounded-2xl border overflow-hidden">
+        {
+          content.benchmarks.rows.map((row) => (
+            <div
+              class="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-4 items-center hover:bg-[#f7f7f7]/70 transition-colors"
+              data-uxis-reveal
+            >
+              <div class="lg:col-span-1 font-mono text-sm font-bold text-[#f7931e]">
+                {row.rank}
+              </div>
+              <div class="lg:col-span-4 text-xl sm:text-2xl font-bold text-[#222222]">
+                {row.domain}
+              </div>
+              <div class="lg:col-span-3">
+                <span class="uxis-pill uxis-pill-orange font-mono text-xs font-semibold">
+                  {row.impact}
+                </span>
+              </div>
+              <div class="lg:col-span-4 text-sm sm:text-base text-[#4e4e4e]">
+                {row.summary}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- 4-Column KPI Stat Strip -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 border border-[#222222]/12 rounded-2xl overflow-hidden bg-white divide-y lg:divide-y-0 divide-x divide-[#222222]/12">
+        {
+          content.benchmarks.stats.map((stat) => (
+            <div class="p-8 space-y-2" data-uxis-reveal>
+              <div class="text-4xl sm:text-5xl font-bold tracking-tight text-[#222222]">
+                {stat.value}
+              </div>
+              <p class="text-xs sm:text-sm font-mono text-[#4e4e4e] uppercase tracking-wider">
+                {stat.label}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- Architecture Comparison Matrix -->
+      <div class="rounded-2xl border border-[#222222]/12 overflow-hidden bg-white" data-uxis-reveal>
+        <div class="p-6 sm:p-8 border-b border-[#222222]/12 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <span class="eyebrow-label">
+              {isDe ? 'ARCHITEKTUR-VERGLEICHSMATRIX' : 'ARCHITECTURE COMPARISON MATRIX'}
+            </span>
+            <h3 class="text-xl sm:text-2xl font-bold text-[#222222]">
+              {
+                isDe
+                  ? 'T3Headless + T3Element im direkten Architektur-Vergleich'
+                  : 'How T3Headless + T3Element compares to legacy & SaaS alternatives'
+              }
+            </h3>
+          </div>
+          <span class="font-mono text-xs text-[#8c8c8c]">
+            {isDe ? 'Quelle: T3Headless Benchmark 2026' : 'Source: T3Headless Benchmark 2026'}
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-[#222222]/12 bg-[#222222] text-white font-mono text-xs uppercase">
+                <th class="py-4 px-6">
+                  {isDe ? 'Architektur-Kriterium' : 'Architectural Dimension'}
+                </th>
+                <th class="py-4 px-6 opacity-75">
+                  {isDe ? 'Klassisches Fluid TYPO3' : 'Traditional Fluid TYPO3'}
+                </th>
+                <th class="py-4 px-6 opacity-75">
+                  {isDe ? 'Generisches SaaS Headless CMS' : 'Generic SaaS Headless CMS'}
+                </th>
+                <th class="py-4 px-6 text-[#f7931e] font-bold">
+                  T3Headless + T3Element
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#222222]/12">
+              <tr class="bg-white">
+                <td class="py-4 px-6 font-semibold text-[#222222]">
+                  {isDe ? 'Nativer Hierarchischer Seitenbaum' : 'Native Hierarchical Page Tree'}
+                </td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✓ {isDe ? 'Vorhanden' : 'Included'}</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✕ {isDe ? 'Flache Content-Listen' : 'Flat collections only'}</td>
+                <td class="py-4 px-6 font-bold text-[#222222]">
+                  ✓ {isDe ? '100% im JSON-Routing erhalten' : '100% preserved in JSON API'}
+                </td>
+              </tr>
+              <tr class="bg-[#f7f7f7]/60">
+                <td class="py-4 px-6 font-semibold text-[#222222]">
+                  {isDe ? 'Fluid-Template-Aufwand' : 'Fluid Template Overhead'}
+                </td>
+                <td class="py-4 px-6 text-[#4e4e4e]">{isDe ? 'Hoch (Fluid + ViewHelper)' : 'High (Fluid + ViewHelpers)'}</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">N/A</td>
+                <td class="py-4 px-6 font-bold text-[#f7931e]">
+                  {isDe ? '0 Fluid-Templates (Direktes JSON)' : '0 Fluid Templates (Direct JSON)'}
+                </td>
+              </tr>
+              <tr class="bg-white">
+                <td class="py-4 px-6 font-semibold text-[#222222]">
+                  {isDe ? 'Edge API Antwortzeit (TTFB)' : 'Edge API Response Time (TTFB)'}
+                </td>
+                <td class="py-4 px-6 text-[#4e4e4e]">180ms - 450ms</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">45ms - 120ms</td>
+                <td class="py-4 px-6 font-bold text-[#222222]">&lt; 18ms (Edge CDN JSON)</td>
+              </tr>
+              <tr class="bg-[#f7f7f7]/60">
+                <td class="py-4 px-6 font-semibold text-[#222222]">
+                  {isDe ? 'Datenhoheit & Private VPC' : 'Data Sovereignty & Private VPC'}
+                </td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✓ Self-Hosted</td>
+                <td class="py-4 px-6 text-[#4e4e4e]">✕ Cloud Vendor Lock-in</td>
+                <td class="py-4 px-6 font-bold text-[#222222]">
+                  ✓ {isDe ? 'Swiss / EU Private Cloud Ready' : 'Swiss / EU Private VPC Ready'}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: OFFICIAL T3ELEMENT ECOSYSTEM & DISTRIBUTION LINKS -->
+  <section class="w-full hairline-b bg-white py-20 lg:py-28">
+    <div class="swiss-container space-y-10">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <span class="eyebrow-label">OFFICIAL T3ELEMENT ECOSYSTEM</span>
+          <h3 class="text-2xl sm:text-3xl font-bold text-[#222222]">
+            {isDe ? 'T3Element direkt starten oder installieren' : 'Launch T3Element Builder or install via Composer'}
+          </h3>
+        </div>
+        <code class="px-4 py-2.5 rounded-full bg-[#f7f7f7] border border-[#222222]/15 font-mono text-xs font-semibold text-[#222222]">
+          {T3ELEMENT_LINKS.composerCmd}
+        </code>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <a
+          href={T3ELEMENT_LINKS.siteUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="p-6 rounded-2xl bg-white border border-[#222222]/12 hover:border-[#f7931e] transition-colors flex flex-col justify-between gap-4"
+        >
+          <span class="font-mono text-xs text-[#f7931e] font-bold">PRODUCT SITE</span>
+          <div>
+            <strong class="block text-lg text-[#222222]">T3Element Website ↗</strong>
+            <span class="text-xs text-[#4e4e4e]">Official overview, guides &amp; docs</span>
+          </div>
+        </a>
+
+        <a
+          href={T3ELEMENT_LINKS.appRegisterUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="p-6 rounded-2xl bg-[#222222] text-white border border-[#222222] hover:bg-black transition-colors flex flex-col justify-between gap-4"
+        >
+          <span class="font-mono text-xs text-[#f7931e] font-bold">SAAS APP</span>
+          <div>
+            <strong class="block text-lg text-white">T3Element Builder ↗</strong>
+            <span class="text-xs text-white/70">Create custom blocks visually</span>
+          </div>
+        </a>
+
+        <a
+          href={T3ELEMENT_LINKS.terUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="p-6 rounded-2xl bg-white border border-[#222222]/12 hover:border-[#f7931e] transition-colors flex flex-col justify-between gap-4"
+        >
+          <span class="font-mono text-xs text-[#f7931e] font-bold">TYPO3 TER</span>
+          <div>
+            <strong class="block text-lg text-[#222222]">EXT:t3element ↗</strong>
+            <span class="text-xs text-[#4e4e4e]">Official TYPO3 Extension Repository</span>
+          </div>
+        </a>
+
+        <a
+          href={T3ELEMENT_LINKS.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="p-6 rounded-2xl bg-white border border-[#222222]/12 hover:border-[#f7931e] transition-colors flex flex-col justify-between gap-4"
+        >
+          <span class="font-mono text-xs text-[#f7931e] font-bold">OPEN SOURCE</span>
+          <div>
+            <strong class="block text-lg text-[#222222]">GitHub &amp; Packagist ↗</strong>
+            <span class="text-xs text-[#4e4e4e]">t3element/t3element12 package</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
