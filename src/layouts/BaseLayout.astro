@@ -174,13 +174,9 @@ const jsonLdPayload = {
 
     <ClientRouter />
 
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtm.js?id=G-C8GCWJ3L3M"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    </script>
+    <!-- Google Tag Manager is NOT loaded here. It is injected by the
+      CookieConsent component only after the visitor grants analytics
+      consent, so no tracking runs before consent. -->
   </head>
   <body class="bg-white text-[#222222] antialiased selection:bg-[#222222] selection:text-white">
     <!-- SXO Accessibility Skip Link -->
